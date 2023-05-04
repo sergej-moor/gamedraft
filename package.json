@@ -1,0 +1,39 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.6.0",
+    "@tailwindcss/typography": "^0.5.9",
+    "nuxt": "^3.3.1",
+    "sass": "^1.59.3",
+    "sass-loader": "^13.2.0",
+    "tailwindcss": "^3.2.7"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.7.12",
+    "@pinia/nuxt": "^0.4.7",
+    "daisyui": "^2.51.4",
+    "downloadjs": "^1.4.7",
+    "pinia": "^2.0.33"
+  },
+  "overrides": {
+    "vue": "latest"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true,
+      "vue/setup-compiler-macros": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ]
+  }
+}

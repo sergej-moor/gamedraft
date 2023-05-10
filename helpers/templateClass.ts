@@ -1,16 +1,18 @@
 import {Attribute} from "./attributeClasses";
-
+import { ContentPage } from "./contentPageClass";
 class Template {
 	name: String
 	attributes: Attribute[]
 	childTemplates: Template[]
+	contentPages: ContentPage[] 
 	id: Number
-	
+
 
 	constructor(name:string, id:Number) {
 		this.name = name;
 		this.attributes = [];
 		this.childTemplates = [];
+		this.contentPages = [];
 		this.id = id;
 	}
 

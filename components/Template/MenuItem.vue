@@ -29,6 +29,17 @@
 			:depth="depth"
 			:id="att.id"
 		></TemplateMenuItemAttribute>
+
+		<!-- Render Content Pages -->
+		<TemplateMenuItemContentPage
+			v-if="showChildren"
+			v-for="content in contentPages"
+			:name="content.name"
+			:depth="depth"
+			:id="content.id"
+		>
+		</TemplateMenuItemContentPage>
+
 		<!-- Render child templates -->
 		<TemplateMenuItem
 			v-if="showChildren"
@@ -38,6 +49,7 @@
 			:depth="depth + 1"
 			:attributes="node.attributes"
 			:templateId="node.id"
+			:contentPages="node.contentPages"
 		>
 		</TemplateMenuItem>
 
@@ -58,12 +70,13 @@
 		depth: Number,
 		attributes: Array,
 		templateId: Number,
+		contentPages: Array,
 	});
 	const name = toRef(props, "name");
 	const childTemplates = toRef(props, "childTemplates");
 	const attributes = toRef(props, "attributes");
 	const templateId = toRef(props, "templateId");
-
+	const contentPages = toRef(props, "contentPages");
 	let showChildren = ref(true);
 
 	function isCurrentTemplate() {
@@ -94,7 +107,7 @@
 		childrenExist.value = false;
 	} */
 
-	const attributesAsText = ref("nothing");
+	/* const attributesAsText = ref("nothing");
 	const attributesAsObj = ref([]);
 	if (attributes.value != undefined) {
 		let text = "";
@@ -102,7 +115,7 @@
 			text += att.name + "\n";
 		});
 		attributesAsText.value = text;
-	}
+	} */
 	/* 	const indent = computed({
 		get() {
 			return { transform: `translate(${depth.value * 50}px)` };

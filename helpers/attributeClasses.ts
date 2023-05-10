@@ -10,7 +10,7 @@ class Attribute {
 		this.type= "base"
 	}
 
-	setId(id:Number){
+	setId(id:Number){ 
 		this.id = id;
 	}
 

@@ -2,11 +2,12 @@
 	<div class="page w-full min-h-full gap-2">
 		<TemplateMenuTree class="menu__tree"></TemplateMenuTree>
 
-		<div class="preview">
+		<div class="preview" v-if="!useTemplateStore().showContentEditor">
 			<TemplateTabs class="tabs"></TemplateTabs>
 			<TemplateToolbar class="toolbar"></TemplateToolbar>
 			<TemplatePage></TemplatePage>
 		</div>
+		<div class="preview" v-else>ContentEdtior Stuff</div>
 
 		<TemplateAttributeInspector
 			:name="templateStore.currentAttribute.name"

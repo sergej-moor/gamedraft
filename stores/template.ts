@@ -170,6 +170,8 @@ export const useTemplateStore = defineStore('template',{
 
         setCurrentContentPageId(id: number){
             this.currentContentPageId = id;
+            console.log(this.currentContentPageId);
+            this.showContentEditor = true;
         },
 
         /* --- ATTRIBUTES --- */
@@ -211,17 +213,6 @@ export const useTemplateStore = defineStore('template',{
                 }
             });
         },
-
-        /* TABS */
-        switchTab(newTabIndex:number){
-            console.log(newTabIndex);
-
-        },
-
-        addNewTab(){
-
-        },
-
         /* --- TEMPLATES --- */
         addTemplate(){
             this.lastTemplateId += 1;
@@ -230,7 +221,7 @@ export const useTemplateStore = defineStore('template',{
         },
         setCurrentTemplateId(id:number){
             this.currentTemplateId = id;
-            console.log("current template id: " + id);
+            this.showContentEditor = false;
         },
         overwriteTemplate(oldId: number, newTemplate:Template){
             /*

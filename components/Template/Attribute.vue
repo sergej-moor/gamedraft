@@ -45,7 +45,7 @@
 	import { useTemplateStore } from "~~/stores/template";
 	const templateStore = useTemplateStore();
 
-	const { updateAttributeName, addTemplate } = templateStore;
+	const { updateAttributeName } = templateStore;
 
 	const props = defineProps({
 		attribute: Attribute,
@@ -59,6 +59,7 @@
 	});
 
 	function updateAttributeTitle(newTitle) {
+		templateStore.setCurrentAttributeId(id);
 		updateAttributeName(id.value, newTitle);
 	}
 </script>

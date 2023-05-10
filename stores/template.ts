@@ -1,11 +1,11 @@
 import { defineStore, acceptHMRUpdate } from 'pinia';
 import {Template} from '../helpers/templateClass';
 import { Attribute } from '~~/helpers/attributeClasses';
+import { ContentPage } from '~~/helpers/contentPageClass';
 
 
 export const useTemplateStore = defineStore('template',{
     state: () => ({
-        
         counter: 0,
         lastTemplateId: 1,
         lastAttributeId: 1,
@@ -17,6 +17,11 @@ export const useTemplateStore = defineStore('template',{
             templateId:0,
         attributeId:0}
         ],
+        lastContentPageId: 1,
+        currentContentPageId: 1,
+
+        showContentEditor: false,
+
 
         root: new Template("rootTemplate", 1),
     }),
@@ -42,9 +47,52 @@ export const useTemplateStore = defineStore('template',{
    
             return true;
         },
-        currentTemplate: (state) : Template | null => {
-         
+        /* allTemplatesInCurrentPath: (state) : Template[] => {
+            const findPath = (ob:Template, key:PropertyKey) => {
+                const path:String[] = [];
+                const keyExists = (obj:Template):Boolean => {
+                  if (!obj || (typeof obj !== "object" && !Array.isArray(obj))) {
+                    return false;
+                  }
+                  else if (obj.hasOwnProperty(key)) {
+                    return true;
+                  }
+                  else if (Array.isArray(obj)) {
+                    let parentKey = path.length ? path.pop() : "";
+              
+                    for (let i = 0; i < obj.length; i++) {
+                      path.push(`${parentKey}[${i}]`);
+                      const result = obj[i].keyExists(key);
+                      if (result) {
+                        return result;
+                      }
+                      path.pop();
+                    }
+                  }
+                  else {
+                    for (const k in obj) {
+                      path.push(k);
+                      const result = keyExists(obj[k], key);
+                      if (result) {
+                        return result;
+                      }
+                      path.pop();
+                    }
+                  }
+                  return false;
+                };
+              
+                keyExists(ob);
+              
+                return path.join(".");
+              }
 
+            return [];
+        }, */
+
+        
+
+        currentTemplate: (state) : Template | null => {
             let findTemplateById = function(template:Template,id:number):Template | null{
                 let templateCopy = null;
     
@@ -88,6 +136,22 @@ export const useTemplateStore = defineStore('template',{
                 return attributeFound;
             
         },
+        
+        currentContentPage(state): ContentPage {
+            let contentPageFound = new ContentPage("contentPage");
+
+            this.currentTemplate!.contentPages.forEach((page:ContentPage) => {
+                console.log(page);
+                if (page.id === state.currentContentPageId){
+                    contentPageFound = page;
+                    return page;
+                }
+            });
+            console.log("current content Page");
+            console.log(contentPageFound);
+
+            return contentPageFound;
+        },
 
 
 
@@ -95,7 +159,23 @@ export const useTemplateStore = defineStore('template',{
 
     },
     actions: {
+        /* CONTENT PAGES */
+
+        addContentPage(contentPage: ContentPage){
+            this.lastContentPageId += 1;
+            contentPage.setId(this.lastContentPageId);
+            contentPage.name = "contentPage"+this.lastContentPageId.toString();
+            this.currentTemplate!.contentPages.push(contentPage);
+        },
+
+        setCurrentContentPageId(id: number){
+            this.currentContentPageId = id;
+        },
+
         /* --- ATTRIBUTES --- */
+        setCurrentAttributeId(id:number){
+            this.currentAttributeId=id;
+        },
         addAttribute(attribute:Attribute){
             this.lastAttributeId += 1;
             attribute.setId(this.lastAttributeId);

@@ -59,7 +59,7 @@
 	});
 
 	function updateAttributeTitle(newTitle) {
-		templateStore.setCurrentAttributeId(id);
+		templateStore.setCurrentAttributeId(id.value);
 		updateAttributeName(id.value, newTitle);
 	}
 </script>

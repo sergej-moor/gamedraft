@@ -32,7 +32,7 @@
 	const ind = ref({ transform: `translate(${depth.value * 20 + 25}px)` });
 
 	function setAttributeId() {
-		templateStore.currentAttributeId = props.id;
+		templateStore.setCurrentAttributeId(props.id);
 	}
 
 	function isCurrentAttribute() {

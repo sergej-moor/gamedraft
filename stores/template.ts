@@ -174,6 +174,10 @@ export const useTemplateStore = defineStore('template',{
             this.showContentEditor = true;
         },
 
+        updateContentPageAttributes(){
+            this.currentContentPage.attributes = this.currentTemplate!.attributes;
+        },
+
         /* --- ATTRIBUTES --- */
         setCurrentAttributeId(id:number){
             this.currentAttributeId=id;

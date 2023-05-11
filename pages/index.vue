@@ -7,7 +7,9 @@
 			<TemplateToolbar class="toolbar"></TemplateToolbar>
 			<TemplatePage></TemplatePage>
 		</div>
-		<div class="preview" v-else>ContentEdtior Stuff</div>
+		<div class="preview" v-else>Content Editor stuff
+			<ContentPage></ContentPage>
+		</div>
 
 		<TemplateAttributeInspector
 			:name="templateStore.currentAttribute.name"

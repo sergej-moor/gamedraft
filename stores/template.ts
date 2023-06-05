@@ -56,11 +56,6 @@ export const useTemplateStore = defineStore('template',{
                         
                         if (foundTemp){
                             templateCopy = foundTemp;
-                            //templateCopy.name = "sssalatsose"+id.toString();
-                            /* foundTemp.name="salatsose"+id.toString();
-                            console.log("found: ");
-                            console.log(foundTemp);
-                            console.log("\n"); */
                             return foundTemp;
                         } 
                     })
@@ -77,7 +72,7 @@ export const useTemplateStore = defineStore('template',{
          currentAttribute(state): Attribute {
             let attributeFound = new Attribute("default");
                 this.currentTemplate!.attributes.forEach((att:Attribute) => {
-                    console.log(att);
+
                     if (att.id === state.currentAttributeId){
                         attributeFound = att;
                      
@@ -150,56 +145,15 @@ export const useTemplateStore = defineStore('template',{
         },
         setCurrentTemplateId(id:number){
             this.currentTemplateId = id;
-            console.log("current template id: " + id);
-        },
-        overwriteTemplate(oldId: number, newTemplate:Template){
-            /*
-            Traverse through the Tree, until the id is found.
-            Update the props according to newTemplate
-            exit the loop
 
-            */
         },
+
 
         
         updateCurrentTemplateName(newName:String){
             this.currentTemplate!.name = newName;
         },
-        updateCurrentTemplate(newTemplate:Template){
-            let updateTemplate = function(oldTemplate:Template,newTemplate:Template){
-                oldTemplate.name = newTemplate.name;
-                oldTemplate.attributes = newTemplate.attributes;
 
-            }
-
-            var findTemplateById = function(template:Template,id:number):Template | null{
-                let templateCopy = null;
-    
-                if (template.id == id) return template;
-    
-                if (template.childTemplates && template.childTemplates.length) {
-                    template.childTemplates.forEach((templ) => {
-                        let foundTemp = findTemplateById(templ,id);
-                        
-                        if (foundTemp){
-                            templateCopy = foundTemp;
-                            templateCopy.name = "sssalatsose"+id.toString();
-                            /* foundTemp.name="salatsose"+id.toString();
-                            console.log("found: ");
-                            console.log(foundTemp);
-                            console.log("\n"); */
-                            return foundTemp;
-                        } 
-                    })
-                    
-                }
-    
-                return templateCopy;
-                
-                
-            }
-
-        },
 
 
     }

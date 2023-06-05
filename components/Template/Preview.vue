@@ -35,7 +35,6 @@
 
 	function updateTemplateName(newName) {
 		templateStore.updateCurrentTemplateName(newName);
-		console.log(newName);
 	}
 
 	const attributes = toRef(props, "attributes");

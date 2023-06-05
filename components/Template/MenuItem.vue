@@ -82,18 +82,6 @@
 		templateStore.setCurrentTemplateId(templateId.value);
 	}
 
-	/* 	function childrenExist() {
-		if (childTemplates.value != undefined) {
-			console.log(childTemplates.value);
-			return childTemplates.value.length > 1;
-		}
-		return false;
-	}
- */
-	/* else {
-		childrenExist.value = false;
-	} */
-
 	const attributesAsText = ref("nothing");
 	const attributesAsObj = ref([]);
 	if (attributes.value != undefined) {

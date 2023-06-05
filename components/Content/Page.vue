@@ -1,19 +1,20 @@
 <template lang="">
 	<div>
-        <div class="divider">
+		<div class="divider">
+			<input
+				type="text"
+				:placeholder="name"
+				:value="name"
+				class="input input-ghost input-xs max-w-xs w-full text-xs text-center"
+			/>
+		</div>
 
-            <input type="text" :placeholder="name" :value="name" class="input input-ghost input-xs max-w-xs w-full text-xs text-center"
-			>
-
-        </div>
-
-        <ol>
-            <li v-for="attribute in attributes">
-                <ContentPageAttribute :attribute="attribute"></ContentPageAttribute>
-            </li>
-        </ol>
-    </div>
-
+		<ol>
+			<li v-for="attribute in attributes">
+				<ContentPageAttribute :attribute="attribute"></ContentPageAttribute>
+			</li>
+		</ol>
+	</div>
 </template>
 <script setup>
 	import { useTemplateStore } from "@/stores/template";

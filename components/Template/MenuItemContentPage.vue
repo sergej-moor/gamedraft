@@ -32,6 +32,7 @@
 
 	function setContentPageId() {
 		templateStore.setCurrentContentPageId(props.id);
+		console.log(templateStore.currentContentPage);
 	}
 
 	function isCurrentContentPage() {

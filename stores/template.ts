@@ -32,7 +32,7 @@ export const useTemplateStore = defineStore('template',{
 
         
 
-        flattenTemplateTree: (state) : Boolean => {
+/*         flattenTemplateTree: (state) : Boolean => {
             function getTemplates(template:Template[]):Template[]{
                 let childTemplates:Template[] = [];
                 const flattenMembers = template.map(t => {
@@ -46,49 +46,8 @@ export const useTemplateStore = defineStore('template',{
               };
    
             return true;
-        },
-        /* allTemplatesInCurrentPath: (state) : Template[] => {
-            const findPath = (ob:Template, key:PropertyKey) => {
-                const path:String[] = [];
-                const keyExists = (obj:Template):Boolean => {
-                  if (!obj || (typeof obj !== "object" && !Array.isArray(obj))) {
-                    return false;
-                  }
-                  else if (obj.hasOwnProperty(key)) {
-                    return true;
-                  }
-                  else if (Array.isArray(obj)) {
-                    let parentKey = path.length ? path.pop() : "";
-              
-                    for (let i = 0; i < obj.length; i++) {
-                      path.push(`${parentKey}[${i}]`);
-                      const result = obj[i].keyExists(key);
-                      if (result) {
-                        return result;
-                      }
-                      path.pop();
-                    }
-                  }
-                  else {
-                    for (const k in obj) {
-                      path.push(k);
-                      const result = keyExists(obj[k], key);
-                      if (result) {
-                        return result;
-                      }
-                      path.pop();
-                    }
-                  }
-                  return false;
-                };
-              
-                keyExists(ob);
-              
-                return path.join(".");
-              }
-
-            return [];
         }, */
+       
 
         
 
@@ -104,11 +63,6 @@ export const useTemplateStore = defineStore('template',{
                         
                         if (foundTemp){
                             templateCopy = foundTemp;
-                            //templateCopy.name = "sssalatsose"+id.toString();
-                            /* foundTemp.name="salatsose"+id.toString();
-                            console.log("found: ");
-                            console.log(foundTemp);
-                            console.log("\n"); */
                             return foundTemp;
                         } 
                     })
@@ -141,14 +95,15 @@ export const useTemplateStore = defineStore('template',{
             let contentPageFound = new ContentPage("contentPage");
 
             this.currentTemplate!.contentPages.forEach((page:ContentPage) => {
-                console.log(page);
+                //console.log(page);
                 if (page.id === state.currentContentPageId){
+              
                     contentPageFound = page;
                     return page;
                 }
             });
-            console.log("current content Page");
-            console.log(contentPageFound);
+            //console.log("current content Page");
+            //console.log(contentPageFound);
 
             return contentPageFound;
         },
@@ -166,17 +121,29 @@ export const useTemplateStore = defineStore('template',{
             contentPage.setId(this.lastContentPageId);
             contentPage.name = "contentPage"+this.lastContentPageId.toString();
             this.currentTemplate!.contentPages.push(contentPage);
+
+            //TODO add the attributes from the current template to this contentpage
+            //if a default value is set, set it to the inital "value"-prop from the attribute-object
         },
 
         setCurrentContentPageId(id: number){
             this.currentContentPageId = id;
-            console.log(this.currentContentPageId);
+            console.log("set currentcontentPage ID to " + this.currentContentPageId);
+            
             this.showContentEditor = true;
         },
 
         updateContentPageAttributes(){
+            //TODO make sure that the content page has the same attributes as the template while remaining the filled in data
             this.currentContentPage.attributes = this.currentTemplate!.attributes;
         },
+
+
+
+        //TODO add functions that update the attribute-objects "value"-prop in the current contentPage
+        // wichtig: number-attribute haben einen min und max-wert, auf den geclampt werden muss wenn der gesetzt ist 
+
+
 
         /* --- ATTRIBUTES --- */
         setCurrentAttributeId(id:number){
@@ -217,6 +184,11 @@ export const useTemplateStore = defineStore('template',{
                 }
             });
         },
+
+        
+
+
+
         /* --- TEMPLATES --- */
         addTemplate(){
             this.lastTemplateId += 1;
@@ -227,72 +199,17 @@ export const useTemplateStore = defineStore('template',{
             this.currentTemplateId = id;
             this.showContentEditor = false;
         },
-        overwriteTemplate(oldId: number, newTemplate:Template){
-            /*
-            Traverse through the Tree, until the id is found.
-            Update the props according to newTemplate
-            exit the loop
 
-            */
-        },
 
         
         updateCurrentTemplateName(newName:String){
             this.currentTemplate!.name = newName;
         },
-        updateCurrentTemplate(newTemplate:Template){
-            let updateTemplate = function(oldTemplate:Template,newTemplate:Template){
-                oldTemplate.name = newTemplate.name;
-                oldTemplate.attributes = newTemplate.attributes;
 
-            }
 
-            var findTemplateById = function(template:Template,id:number):Template | null{
-                let templateCopy = null;
-    
-                if (template.id == id) return template;
-    
-                if (template.childTemplates && template.childTemplates.length) {
-                    template.childTemplates.forEach((templ) => {
-                        let foundTemp = findTemplateById(templ,id);
-                        
-                        if (foundTemp){
-                            templateCopy = foundTemp;
-                            templateCopy.name = "sssalatsose"+id.toString();
-                            /* foundTemp.name="salatsose"+id.toString();
-                            console.log("found: ");
-                            console.log(foundTemp);
-                            console.log("\n"); */
-                            return foundTemp;
-                        } 
-                    })
-                    
-                }
-    
-                return templateCopy;
-                
-                
-            }
 
-        },
 
 
     }
 })
 
-/* export const useTemplateStore = defineStore({
-    id: 'template',
-    state: () => ({
-        template: new Template("rootTemplate"),
-    }),
-    getters: {
-        rootTemplate: (state): Template =>{
-            return state.template;
-        }
-    },
-    actions:{
-
-    }
-
-
-}) */

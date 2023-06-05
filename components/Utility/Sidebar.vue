@@ -1,6 +1,6 @@
 <template lang="">
 	<div class="w-auto bg-slate-700 flex flex-col sidebar">
-		<UtilitySidebarButton @pressButton="showTemplateEditor()"
+		<UtilitySidebarButton @pressButton="logToConsole()"
 			><svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -73,6 +73,11 @@
 	import download from "downloadjs";
 	import { useTemplateStore } from "~~/stores/template";
 	const templateStore = useTemplateStore();
+
+	function logToConsole() {
+		//LOG YOUR STUFF HERE
+		console.log(templateStore.currentContentPage);
+	}
 
 	function firstAction() {
 		console.log("do some stuff");

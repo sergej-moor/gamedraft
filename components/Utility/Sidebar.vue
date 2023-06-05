@@ -63,8 +63,6 @@
 	}
 
 	function exportTemplate() {
-		console.log("export template");
-
 		download(
 			JSON.stringify(templateStore.root),
 			"templatetree.txt",

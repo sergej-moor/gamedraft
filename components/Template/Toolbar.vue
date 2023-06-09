@@ -1,6 +1,6 @@
 <template lang="">
 	<div class="min-w-full">
-		<ul class="menu menu-horizontal rounded-box bg-base-300 min-w-full">
+		<ul class="flex rounded-box bg-gray-400 rounded-r rounded-b p-1 min-w-full">
 			<li class="tooltip tooltip-bottom" data-tip="Add a text attribute">
 				<button class="btn" @click="addTextFieldAttribute">
 					<svg

@@ -1,20 +1,20 @@
 <template>
 	<div class="flex-1 w-full">
-		<label class="input-group input-group-xs input-group-vertical w-full m-0">
-			<span class="w-full flex p-0">
+		<label class="m-0 flex w-full">
+			<span class="w-44 flex mr-4">
+				<IconEdit></IconEdit>
 				<input
-					class="w-full input input-sm input-ghost focus:outline-none focus:bg-transparent"
+					class="bg-gray-800 w-fit"
 					type="text"
 					placeholder="Attribute name"
 					:value="title"
 					@input="$emit('updateTitle', $event.target.value)"
 				/>
-				<IconEdit></IconEdit>
 			</span>
 			<input
 				type="text"
 				placeholder="Text input field."
-				class="input input-bordered input-xs"
+				class="bg-gray-200 rounded-sm text-white placeholder-gray-100"
 				disabled
 			/>
 		</label>

@@ -1,15 +1,34 @@
 <template>
 	<div class="">
-		<div class="divider">
+		<!-- 		<div class="divider">
 			<input
 				type="text"
 				:placeholder="name"
 				:value="name"
 				@input="(event) => updateTemplateName(event.target.value)"
-				class="input input-ghost input-xs max-w-xs w-full text-xs text-center"
+				class="max-w-xs w-full text-xs text-center"
 			/>
-		</div>
-		<ol>
+		</div> -->
+
+		<input
+			type="text"
+			:placeholder="name"
+			:value="name"
+			@input="(event) => updateTemplateName(event.target.value)"
+			class="bg-gray-800 rounded-sm max-w-xs w-full text-xl"
+		/>
+
+		<!-- 		<UtilityDivider>
+			<input
+				type="text"
+				:placeholder="name"
+				:value="name"
+				@input="(event) => updateTemplateName(event.target.value)"
+				class="bg-gray-200 rounded-sm max-w-xs w-full text-xs text-center"
+			/>
+		</UtilityDivider> -->
+
+		<ol class="w-full">
 			<li v-for="attribute in attributes">
 				<TemplateAttribute
 					:attribute="attribute"
@@ -17,6 +36,8 @@
 				></TemplateAttribute>
 			</li>
 		</ol>
+
+		<UtilityDivider></UtilityDivider>
 	</div>
 </template>
 <script setup>

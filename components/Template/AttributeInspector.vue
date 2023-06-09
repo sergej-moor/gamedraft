@@ -1,6 +1,6 @@
 <template lang="">
-	<div class="flex flex-wrap flex-col bg-slate-800 px-2">
-		<h2 class="prose text-center m-2">Attribute Inspector</h2>
+	<div class="bg-gray-400 rounded-tl flex flex-wrap flex-col px-2">
+		<h2 class="text-center text-lg m-2">Attribute Inspector</h2>
 
 		<!-- Attribute Type -->
 		<div class="text-xs p-1">

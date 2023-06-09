@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="tabs tabs-boxed">
+		<div class="">
 			<TemplateTabbarTab name="Test" :tabIndex="99"></TemplateTabbarTab>
 		</div>
 	</div>

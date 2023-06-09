@@ -2,7 +2,7 @@
 	<div class="navbar bg-neutral z-50 p-1 min-h-fit m-0">
 		<div class="flex-1">
 			<a href="" class="p-1 m-1 text-base">GameDraft</a>
-			<div class="flex-none">
+			<!-- 			<div class="flex-none">
 				<ul class="menu menu-horizontal px-1">
 					<li tabindex="0">
 						<a href="" class="p-1 m-1"
@@ -16,7 +16,7 @@
 					<li><a href="" class="p-1 m-1">Edit</a></li>
 					<li><a href="" class="p-1 m-1">About</a></li>
 				</ul>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </template>

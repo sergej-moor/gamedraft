@@ -1,6 +1,6 @@
 <template lang="">
-	<div class="bg-slate-800">
-		<h2 class="prose text-center m-2">Template Tree</h2>
+	<div class="bg-gray-400 rounded-t">
+		<h2 class="text-lg text-center m-2">Template Tree</h2>
 		<button class="btn" @click="addContentPage()">
 			Add ContentPage to current Template
 		</button>

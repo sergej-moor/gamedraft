@@ -1,6 +1,10 @@
 <template lang="">
-	<div>
-		<a class="tab" @click="switchtab()">Tab 1</a>
+	<div class="bg-gray-400 pl-4 p-2 w-fit rounded-t">
+		<a class="" @click="switchtab()"
+			><span class="pr-12">{{ name }}</span>
+
+			<button>X</button>
+		</a>
 	</div>
 </template>
 <script setup>

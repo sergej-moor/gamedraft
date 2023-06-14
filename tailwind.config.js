@@ -14,6 +14,10 @@ module.exports = {
 			red: {
 				200: "#F24C3D",
 			},
+			blue: {
+				500: "#04395E",
+				200: "#007FD4",
+			},
 
 			white: "#E4E3ED",
 		},

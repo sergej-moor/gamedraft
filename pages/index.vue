@@ -1,13 +1,14 @@
 <template lang="">
 	<div class="page w-full min-h-full gap-2">
-		<TemplateMenuTree class="menu__tree"></TemplateMenuTree>
+		<TemplateTreeMenuTree class="menu__tree p-2"></TemplateTreeMenuTree>
 
 		<div class="preview" v-if="!useTemplateStore().showContentEditor">
 			<TemplateTabs class="tabs"></TemplateTabs>
 			<TemplateToolbar class="toolbar"></TemplateToolbar>
 			<TemplatePage></TemplatePage>
 		</div>
-		<div class="preview" v-else>Content Editor stuff
+		<div class="preview" v-else>
+			Content Editor stuff
 			<ContentPage></ContentPage>
 		</div>
 
@@ -41,6 +42,7 @@
 
 	.menu__tree {
 		grid-area: menu__tree;
+		overflow: scroll;
 	}
 
 	.attribute__inspector {

@@ -5,6 +5,9 @@ import { ContentPage } from '~~/helpers/contentPageClass';
 
 
 export const useTemplateStore = defineStore('template',{
+    persist: {
+        storage: persistedState.localStorage,
+      },
     state: () => ({
         counter: 0,
         lastTemplateId: 1,

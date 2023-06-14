@@ -20,4 +20,26 @@
 	}
 	input {
 	}
+
+	/* width */
+	::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+
+	/* Track */
+	::-webkit-scrollbar-track {
+		background: #333333;
+	}
+
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+		background: #04395e;
+		border-radius: 4px;
+	}
+
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+		background: #007fd4;
+	}
 </style>

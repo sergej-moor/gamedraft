@@ -1,47 +1,48 @@
 <template>
-	<div class="">
-		<a
-			class=""
-			:class="{
-				link: true,
-				'link-hover': true,
-				'link-primary': isCurrentTemplate(),
-			}"
-			@click="setCurrentTemplate()"
-		>
-			<div :style="ind" class="flex">
+	<div>
+		<a @click="setCurrentTemplate()">
+			<div
+				class="flex rounded-sm"
+				:class="{
+					/* 		'border-2': isCurrentTemplate(),
+					'border-blue-200': isCurrentTemplate(),
+					'bg-blue-500': isCurrentTemplate(), */
+					'text-blue-200': isCurrentTemplate(),
+				}"
+				:style="ind"
+			>
 				<UtilityExpandButton
 					@click="showChildren = !showChildren"
 					v-if="true"
 					:expanded="showChildren"
 				></UtilityExpandButton>
-				<div v-else class="btn btn-xs btn-square m-1"></div>
+				<div v-else class="m-1"></div>
 				<div class="self-center">{{ name }}</div>
 			</div>
 		</a>
 
 		<!-- Render template attributes -->
-		<TemplateMenuItemAttribute
+		<!-- 		<TemplateMenuItemAttribute
 			v-if="showChildren"
 			v-for="att in attributes"
 			:name="att.name"
 			:type="att.type"
 			:depth="depth"
 			:id="att.id"
-		></TemplateMenuItemAttribute>
+		></TemplateMenuItemAttribute> -->
 
 		<!-- Render Content Pages -->
-		<TemplateMenuItemContentPage
+		<TemplateTreeMenuItemContentPage
 			v-if="showChildren"
 			v-for="content in contentPages"
 			:name="content.name"
 			:depth="depth"
 			:id="content.id"
 		>
-		</TemplateMenuItemContentPage>
+		</TemplateTreeMenuItemContentPage>
 
 		<!-- Render child templates -->
-		<TemplateMenuItem
+		<TemplateTreeMenuItemTemplate
 			v-if="showChildren"
 			v-for="node in childTemplates"
 			:childTemplates="node.childTemplates"
@@ -51,7 +52,7 @@
 			:templateId="node.id"
 			:contentPages="node.contentPages"
 		>
-		</TemplateMenuItem>
+		</TemplateTreeMenuItemTemplate>
 
 		<slot></slot>
 	</div>
@@ -80,7 +81,8 @@
 	let showChildren = ref(true);
 
 	function isCurrentTemplate() {
-		return props.templateId === templateStore.currentTemplateId;
+		console.log("true");
+		return templateId.value === templateStore.currentTemplateId;
 	}
 
 	function toggleChildren() {
@@ -92,6 +94,7 @@
 	);
 
 	function setCurrentTemplate() {
+		console.log("HEY");
 		templateStore.setCurrentTemplateId(templateId.value);
 	}
 
@@ -123,6 +126,6 @@
 	}); */
 
 	const depth = toRef(props, "depth");
-	const ind = ref({ transform: `translate(${depth.value * 20}px)` });
+	const ind = ref({ marginLeft: `${depth.value * 20}px` });
 </script>
 <style lang=""></style>

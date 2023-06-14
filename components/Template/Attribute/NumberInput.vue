@@ -21,9 +21,13 @@
 	</div>
 </template>
 <script setup>
+	import { useTemplateStore } from "@/stores/template";
+	const templateStore = useTemplateStore();
+
 	const props = defineProps({
 		title: String,
 	});
+
 	const title = toRef(props, "title");
 </script>
 <style lang=""></style>

@@ -4,7 +4,7 @@
 		<button class="btn" @click="addContentPage()">
 			Add ContentPage to current Template
 		</button>
-		<TemplateMenuItem
+		<TemplateTreeMenuItemTemplate
 			:name="templateTree.name"
 			:childTemplates="templateTree.childTemplates"
 			:depth="0"
@@ -12,7 +12,7 @@
 			:templateId="templateTree.id"
 			:contentPages="templateTree.contentPages"
 		>
-		</TemplateMenuItem>
+		</TemplateTreeMenuItemTemplate>
 	</div>
 </template>
 <script setup>

@@ -15,7 +15,7 @@
 <script setup>
 	import { Template } from "~~/helpers/templateClass";
 	const props = defineProps({
-		templateList: Template,
+		templateList: Array,
 	});
 	const templates = toRef(props, "templateList");
 </script>

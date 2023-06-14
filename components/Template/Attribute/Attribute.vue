@@ -1,5 +1,11 @@
 <template>
-	<div class="form-control flex my-1">
+	<div
+		class="flex my-1 rounded px-1"
+		:class="{
+			'bg-blue-500': isCurrentAttribute(),
+		}"
+		@click="setAttributeId()"
+	>
 		<!-- single line TEXTFIELD  -->
 		<div class="flex">
 			<TemplateAttributeTextInput
@@ -34,6 +40,7 @@
 
 			<div v-else>Unknown Attribute Type called {{ attribute.type }}</div>
 			<TemplateAttributeDeleteButton
+				class="justify-self-end"
 				@deleteAttribute="handleDelete()"
 			></TemplateAttributeDeleteButton>
 		</div>
@@ -61,5 +68,13 @@
 	function updateAttributeTitle(newTitle) {
 		templateStore.setCurrentAttributeId(id.value);
 		updateAttributeName(id.value, newTitle);
+	}
+
+	function setAttributeId() {
+		templateStore.setCurrentAttributeId(id.value);
+	}
+
+	function isCurrentAttribute() {
+		return templateStore.currentAttributeId == id.value;
 	}
 </script>

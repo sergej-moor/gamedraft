@@ -20,35 +20,33 @@
 			}} -->
 		</div>
 		<!-- Attribute Name -->
-		<div class="form-control w-full">
-			<label class="label p-1">
-				<span class="label-text text-xs">Attribute Name</span>
+		<div class="w-full">
+			<label class="">
+				<span class="">Attribute Name</span>
 			</label>
 			<input
 				:value="name"
 				@input="(event) => updateAttributeName(event.target.value)"
 				type="text"
 				placeholder="name"
-				class="input input-bordered input-xs w-full"
+				class="w-full rounded-sm bg-gray-200 p-1 text-sm"
 			/>
 		</div>
 
-		<!-- Default Value -->
-		<div class="form-control w-full">
-			<label class="label p-1">
-				<span class="label-text text-xs">Default Value</span>
-			</label>
-			<div class="flex">
-				<input type="checkbox" class="checkbox" />
+		<div class="">
+			<div class="flex align-baseline w-full my-1 py-1 h-8">
 				<input
-					type="text"
-					placeholder="default val"
-					class="input input-bordered input-xs w-full"
+					type="checkbox"
+					class="focus:ring-white checked:gray-800"
+					name=""
+					id="ch"
 				/>
+				<label for="ch" class="text-sm ml-2">Hey</label>
 			</div>
 		</div>
 
-		<div class="divider"></div>
+		<!-- Default Value -->
+
 		<TemplateInspectorNumber v-if="type == 'number'"></TemplateInspectorNumber>
 	</div>
 </template>

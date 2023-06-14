@@ -1,10 +1,10 @@
 <template>
 	<div class="flex-1 w-full">
 		<label class="m-0 flex w-full">
-			<span class="w-44 flex mr-4">
+			<span class="flex mr-4">
 				<IconEdit></IconEdit>
 				<input
-					class="bg-gray-800 w-fit"
+					class="form-input text-sm bg-gray-800 border-none w-fit outline-none focus:outline-none px-2 py-1"
 					type="text"
 					placeholder="Attribute name"
 					:value="title"
@@ -14,7 +14,7 @@
 			<input
 				type="text"
 				placeholder="Text input field."
-				class="bg-gray-200 rounded-sm text-white placeholder-gray-100"
+				class="form-input text-sm bg-gray-200 border-none rounded-sm text-white placeholder-gray-100 px-2 py-1"
 				disabled
 			/>
 		</label>

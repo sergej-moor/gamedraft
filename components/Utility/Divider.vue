@@ -1,7 +1,10 @@
 <template>
-	<div class="flex">
+	<div class="flex gap-1">
+		<UtilityVisibilityToggle :visible="true"></UtilityVisibilityToggle>
 		<slot></slot>
-		<div class="border-b-gray-200 border-2 w-full"></div>
+		<div class="w-full flex flex-col justify-center">
+			<div class="border-b-2 border-b-gray-200 w-full h-0"></div>
+		</div>
 	</div>
 </template>
 <script>

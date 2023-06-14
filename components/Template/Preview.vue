@@ -1,5 +1,5 @@
 <template>
-	<div class="">
+	<div class="bg-gray-600 p-2 mt-2 rounded">
 		<!-- 		<div class="divider">
 			<input
 				type="text"
@@ -10,13 +10,19 @@
 			/>
 		</div> -->
 
-		<input
-			type="text"
-			:placeholder="name"
-			:value="name"
-			@input="(event) => updateTemplateName(event.target.value)"
-			class="bg-gray-800 rounded-sm max-w-xs w-full text-xl"
-		/>
+		<TemplateBreadcrumb :templateList="templateList"></TemplateBreadcrumb>
+
+		<div class="w-full text-3xl font-semibold">Template</div>
+
+		<UtilityDivider>
+			<input
+				type="text"
+				:placeholder="name"
+				:value="name"
+				@input="(event) => updateTemplateName(event.target.value)"
+				class="bg-gray-600 rounded-sm w-fit text-sm border-none px-1"
+			/>
+		</UtilityDivider>
 
 		<!-- 		<UtilityDivider>
 			<input
@@ -36,8 +42,6 @@
 				></TemplateAttribute>
 			</li>
 		</ol>
-
-		<UtilityDivider></UtilityDivider>
 	</div>
 </template>
 <script setup>
@@ -60,5 +64,7 @@
 	}
 
 	const attributes = toRef(props, "attributes");
+
+	const templateList = [{ title: "Sword" }, { title: "Katana" }];
 </script>
 <style lang=""></style>

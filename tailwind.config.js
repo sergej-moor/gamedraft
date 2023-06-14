@@ -11,15 +11,19 @@ module.exports = {
 				200: "#454546",
 				100: "#6d6d6d",
 			},
+			red: {
+				200: "#F24C3D",
+			},
 
 			white: "#E4E3ED",
 		},
 
 		borderRadius: {
 			DEFAULT: "1rem",
+			sm: "0.25rem",
 		},
 
 		extend: {},
 	},
-	plugins: [require("@tailwindcss/typography")],
+	plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],
 };

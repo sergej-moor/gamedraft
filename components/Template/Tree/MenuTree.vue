@@ -1,6 +1,7 @@
 <template lang="">
 	<div class="bg-gray-400 rounded-t">
 		<h2 class="text-lg text-center m-2">Template Tree</h2>
+		<TemplateTreeSearchbar></TemplateTreeSearchbar>
 		<button class="btn" @click="addContentPage()">
 			Add ContentPage to current Template
 		</button>

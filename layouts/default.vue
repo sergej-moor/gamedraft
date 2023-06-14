@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="defaultlayout h-screen overflow-auto text-xs bg-gray-800 text-white"
+		class="flex flex-col defaultlayout h-screen overflow-auto text-xs bg-gray-800 text-white"
 	>
 		<UtilityNavbar></UtilityNavbar>
 		<div class="page-wrapper h-full flex">

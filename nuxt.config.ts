@@ -7,6 +7,7 @@ export default defineNuxtConfig({
             '~/components/Utility',
         ]
     },
+    plugins:[ {src: '~/plugins/simple-context-menu.js', ssr:false}]
 /*     vue:{
         compilerOptions:{
             isCustomElement: (tag) => ['lite']

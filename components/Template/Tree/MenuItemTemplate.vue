@@ -1,12 +1,23 @@
 <template>
 	<div>
-		<a @click="setCurrentTemplate()">
+		<VueSimpleContextMenu
+			:element-id="templateId.toString()"
+			:options="options"
+			ref="vueSimpleContextMenu"
+			@option-clicked="optionClicked"
+		/>
+
+		<a
+			@click="setCurrentTemplate()"
+			@contextmenu.prevent.stop="showContextMenu($event)"
+		>
 			<div
-				class="flex rounded-sm"
+				class="flex rounded-sm hover:bg-blue-500"
 				:class="{
 					/* 		'border-2': isCurrentTemplate(),
 					'border-blue-200': isCurrentTemplate(),
-					'bg-blue-500': isCurrentTemplate(), */
+					'bg-blue-500': isCurrentTemplate(), 
+					'hover:text-white': isCurrentTemplate(),*/
 					'text-blue-200': isCurrentTemplate(),
 				}"
 				:style="ind"
@@ -64,6 +75,8 @@
 </script>
 <script setup>
 	import { useTemplateStore } from "~~/stores/template";
+	import VueSimpleContextMenu from "vue-simple-context-menu";
+	import { ref } from "vue";
 	const templateStore = useTemplateStore();
 	const props = defineProps({
 		name: String,
@@ -81,7 +94,6 @@
 	let showChildren = ref(true);
 
 	function isCurrentTemplate() {
-		console.log("true");
 		return templateId.value === templateStore.currentTemplateId;
 	}
 
@@ -98,6 +110,46 @@
 		templateStore.setCurrentTemplateId(templateId.value);
 	}
 
+	/* CONTEXT MENU */
+
+	const options = [
+		{
+			name: "Duplicate",
+			slug: "duplicate",
+		},
+		{
+			type: "divider",
+		},
+		{
+			name: "Rename",
+			slug: "rename",
+		},
+		{
+			name: "<em>Delete</em>",
+			slug: "delete",
+		},
+	];
+	const vueSimpleContextMenu = ref(null);
+
+	function showContextMenu(event) {
+		//console.log(vueSimpleContextMenu.value);
+
+		let menus = document.getElementsByClassName("vue-simple-context-menu");
+		//console.log("MENUS");
+		//console.log(menus);
+
+		Array.from(menus).forEach((menu) => {
+			menu.classList.remove("vue-simple-context-menu--active");
+		});
+		vueSimpleContextMenu.value.showMenu(event, null);
+	}
+
+	function optionClicked(event) {
+		//window.alert(JSON.stringify(event));
+		if (event.option.slug == "delete") {
+			window.alert("YO" + name.value);
+		}
+	}
 	/* 	function childrenExist() {
 		if (childTemplates.value != undefined) {
 			console.log(childTemplates.value);

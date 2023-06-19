@@ -5,6 +5,7 @@
 		<button class="btn" @click="addContentPage()">
 			Add ContentPage to current Template
 		</button>
+
 		<TemplateTreeMenuItemTemplate
 			:name="templateTree.name"
 			:childTemplates="templateTree.childTemplates"
@@ -27,6 +28,11 @@
 		console.log("addContent Page");
 		templateStore.addContentPage(content);
 	}
+
+	function onPressW() {
+		console.log("WWW");
+	}
+
 	//const title = ref(templateStore.getMenuTree());
 	/* 	let tree = {
 		name: "root",

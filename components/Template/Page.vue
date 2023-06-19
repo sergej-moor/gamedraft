@@ -1,5 +1,5 @@
 <template lang="">
-	<div class="">
+	<div class="h-full">
 		<TemplatePreview
 			:attributes="templateStore.currentTemplate.attributes"
 			:name="templateStore.currentTemplate.name"

@@ -2,7 +2,10 @@
 	<div class="page w-full min-h-full gap-2">
 		<TemplateTreeMenuTree class="menu__tree p-2"></TemplateTreeMenuTree>
 
-		<div class="preview" v-if="!useTemplateStore().showContentEditor">
+		<div
+			class="preview h-full flex flex-col"
+			v-if="!useTemplateStore().showContentEditor"
+		>
 			<TemplateTabs class="tabs"></TemplateTabs>
 			<TemplateToolbar class="toolbar"></TemplateToolbar>
 			<TemplatePage></TemplatePage>

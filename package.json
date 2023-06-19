@@ -21,6 +21,7 @@
     "@pinia/nuxt": "^0.4.7",
     "@tailwindcss/forms": "^0.5.3",
     "downloadjs": "^1.4.7",
+    "floating-vue": "^2.0.0-beta.22",
     "pinia": "^2.0.33",
     "vue-simple-context-menu": "^4.0.4"
   },

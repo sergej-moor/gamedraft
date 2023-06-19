@@ -1,8 +1,12 @@
 <template lang="">
 	<div class="min-w-full">
 		<ul class="flex rounded-box bg-gray-400 rounded-r rounded-b p-1 min-w-full">
-			<li class="tooltip tooltip-bottom" data-tip="Add a text attribute">
-				<button class="btn" @click="addTextFieldAttribute">
+			<li v-tooltip="'Add a text attribute'">
+				<button
+					class="btn"
+					@click="addTextFieldAttribute"
+					v-tooltip="'Add a text attribute'"
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -20,7 +24,7 @@
 				</button>
 			</li>
 
-			<li class="tooltip tooltip-bottom" data-tip="Add a number attribute">
+			<li v-tooltip="'Add a number attribute'">
 				<button class="btn" @click="addNumberFieldAttribute">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +43,7 @@
 				</button>
 			</li>
 
-			<li class="tooltip tooltip-bottom" data-tip="Add a child template">
+			<li v-tooltip="'Add a child template'">
 				<button class="btn" @click="addChildTemplate">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"

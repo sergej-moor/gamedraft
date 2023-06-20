@@ -40,8 +40,6 @@ to open the menu. -->
 	const vueSimpleContextMenu = ref(null);
 
 	function handleClick(event, item) {
-		console.log(item);
-		console.log(vueSimpleContextMenu.value);
 		vueSimpleContextMenu.value.showMenu(event, item);
 	}
 

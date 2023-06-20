@@ -76,16 +76,11 @@
 
 	function logToConsole() {
 		//LOG YOUR STUFF HERE
-		console.log(templateStore.currentContentPage);
 	}
 
-	function firstAction() {
-		console.log("do some stuff");
-	}
+	function firstAction() {}
 
 	function exportTemplate() {
-		console.log("export template");
-
 		download(
 			JSON.stringify(templateStore.root),
 			"templatetree.txt",
@@ -94,7 +89,6 @@
 	}
 
 	async function showTemplateEditor() {
-		console.log("show template editor");
 		await navigateTo("/");
 	}
 

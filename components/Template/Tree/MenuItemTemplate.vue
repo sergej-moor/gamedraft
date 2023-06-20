@@ -106,8 +106,8 @@
 	);
 
 	function setCurrentTemplate() {
-		console.log("HEY");
 		templateStore.setCurrentTemplateId(templateId.value);
+		console.log(templateStore.getParentsOfCurrent)
 	}
 
 	/* CONTEXT MENU */

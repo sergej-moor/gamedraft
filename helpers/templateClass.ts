@@ -7,7 +7,6 @@ class Template {
 	contentPages: ContentPage[] 
 	id: Number
 
-
 	constructor(name:string, id:Number) {
 		this.name = name;
 		this.attributes = [];

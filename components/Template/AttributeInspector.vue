@@ -5,17 +5,17 @@
 		<!-- Attribute Type -->
 		<div class="text-xs p-1">
 			<!-- {{
-				templateStore.currentAttribute != null
-					? templateStore.currentAttribute.type
+				templateStore.selectedAttribute != null
+					? templateStore.selectedAttribute.type
 					: "none"
 			}} -->
 			{{ type }}
 			Attribute | ID:
 			{{ id }}
-			<!-- {{ templateStore.currentAttribute.id }} -->
+			<!-- {{ templateStore.selectedAttribute.id }} -->
 			<!-- 		{{
-				templateStore.currentAttribute != null
-					? templateStore.currentAttribute.id
+				templateStore.selectedAttribute != null
+					? templateStore.selectedAttribute.id
 					: "none"
 			}} -->
 		</div>
@@ -59,10 +59,10 @@
 		id: Number,
 	});
 
-	const { updateCurrentAttributeName } = useTemplateStore();
+	const { updateSelectedAttributeName } = useTemplateStore();
 
 	function updateAttributeName(newName) {
-		updateCurrentAttributeName(newName);
+		updateSelectedAttributeName(newName);
 	}
 </script>
 <style scoped lang="scss">

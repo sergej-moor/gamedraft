@@ -1,6 +1,6 @@
 <template>
 	<div class="flex my-1 rounded px-1" :class="{
-		'bg-blue-500': isCurrentAttribute(),
+		'bg-blue-500': isSelectedAttribute(),
 	}" @click="setAttributeId()">
 		<!-- single line TEXTFIELD  -->
 		<div class="flex">
@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { Attribute } from "~~/helpers/attributeClasses";
+import { Attribute } from "~~/classes/Attributes";
 import { useTemplateStore } from "~~/stores/template";
 const templateStore = useTemplateStore();
 
@@ -54,15 +54,16 @@ const handleDelete = ref(() => {
 });
 
 function updateAttributeTitle(newTitle) {
-	templateStore.setCurrentAttributeId(id.value);
+	templateStore.setSelectedAttributeId(id.value);
 	updateAttributeName(id.value, newTitle);
 }
 
 function setAttributeId() {
-	templateStore.setCurrentAttributeId(id.value);
+	templateStore.setSelectedAttributeId(id.value);
 }
 
-function isCurrentAttribute() {
-	return templateStore.currentAttributeId == id.value;
+function isSelectedAttribute() {
+	return templateStore.selectedAttributeId == id.value;
 }
 </script>
+~~/classes/Attributes

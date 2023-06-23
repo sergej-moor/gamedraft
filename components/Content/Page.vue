@@ -11,14 +11,14 @@
 
 		<ol>
 			<li v-for="attribute in attributes">
-				<ContentPageAttribute :attribute="attribute"></ContentPageAttribute>
+				<EntryAttribute :attribute="attribute"/>
 			</li>
 		</ol>
 	</div>
 </template>
 <script setup>
 	import { useTemplateStore } from "@/stores/template";
-	import { Attribute } from "~~/helpers/attributeClasses";
+	import { Attribute } from "~~/classes/Attributes";
 	const templateStore = useTemplateStore();
 
 	const props = defineProps({
@@ -28,3 +28,4 @@
 	});
 </script>
 <style lang=""></style>
+~~/classes/Attributes

@@ -8,7 +8,7 @@
 		/>
 
 		<a
-			@click="setCurrentTemplate()"
+			@click="selectTemplate()"
 			@contextmenu.prevent.stop="showContextMenu($event)"
 		>
 			<div
@@ -43,27 +43,26 @@
 		></TemplateMenuItemAttribute> -->
 
 		<!-- Render Content Pages -->
-		<TemplateTreeMenuItemContentPage
+		<TemplateTreeMenuItemEntry
 			v-if="showChildren"
-			v-for="content in contentPages"
+			v-for="content in entries"
 			:name="content.name"
 			:depth="depth"
 			:id="content.id"
 		>
-		</TemplateTreeMenuItemContentPage>
+		</TemplateTreeMenuItemEntry>
 
 		<!-- Render child templates -->
 		<TemplateTreeMenuItemTemplate
 			v-if="showChildren"
-			v-for="node in childTemplates"
-			:childTemplates="node.childTemplates"
+			v-for="node in children"
+			:children="node.children"
 			:name="node.name"
 			:depth="depth + 1"
 			:attributes="node.attributes"
 			:templateId="node.id"
-			:contentPages="node.contentPages"
-		>
-		</TemplateTreeMenuItemTemplate>
+			:entries="node.entries"
+		/>
 
 		<slot></slot>
 	</div>
@@ -80,21 +79,21 @@
 	const templateStore = useTemplateStore();
 	const props = defineProps({
 		name: String,
-		childTemplates: Array,
+		children: Array,
 		depth: Number,
 		attributes: Array,
 		templateId: Number,
-		contentPages: Array,
+		entries: Array,
 	});
 	const name = toRef(props, "name");
-	const childTemplates = toRef(props, "childTemplates");
+	const children = toRef(props, "children");
 	const attributes = toRef(props, "attributes");
 	const templateId = toRef(props, "templateId");
-	const contentPages = toRef(props, "contentPages");
+	const entries = toRef(props, "entries");
 	let showChildren = ref(true);
 
 	function isCurrentTemplate() {
-		return templateId.value === templateStore.currentTemplateId;
+		return templateId.value === templateStore.selectedTemplateId;
 	}
 
 	function toggleChildren() {
@@ -102,12 +101,14 @@
 	}
 
 	const childrenExist = ref(
-		childTemplates.value != undefined && childTemplates.value.length > 0
+		children.value != undefined && children.value.length > 0
 	);
 
-	function setCurrentTemplate() {
-		templateStore.setCurrentTemplateId(templateId.value);
-		console.log(templateStore.getParentsOfCurrent)
+	function selectTemplate() {
+		templateStore.setSelectedTemplateId(templateId.value);
+
+		//console.clear();
+		//console.log(templateStore.getParentsOfCurrent)
 	}
 
 	/* CONTEXT MENU */
@@ -151,9 +152,9 @@
 		}
 	}
 	/* 	function childrenExist() {
-		if (childTemplates.value != undefined) {
-			console.log(childTemplates.value);
-			return childTemplates.value.length > 1;
+		if (children.value != undefined) {
+			console.log(children.value);
+			return children.value.length > 1;
 		}
 		return false;
 	}

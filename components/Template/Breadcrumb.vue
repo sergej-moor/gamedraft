@@ -13,10 +13,11 @@
 	</div>
 </template>
 <script setup>
-	import { Template } from "~~/helpers/templateClass";
+	import Template from "~~/classes/Template";
 	const props = defineProps({
 		templateList: Array,
 	});
 	const templates = toRef(props, "templateList");
 </script>
 <style lang=""></style>
+~~/classes/Template~~/classes/Template

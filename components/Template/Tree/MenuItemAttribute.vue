@@ -5,7 +5,7 @@
 				link: true,
 				flex: true,
 				'link-hover': true,
-				'link-secondary': isCurrentAttribute(),
+				'link-secondary': isSelectedAttribute(),
 			}"
 			@click="setAttributeId()"
 		>
@@ -32,13 +32,13 @@
 	const ind = ref({ transform: `translate(${depth.value * 20 + 25}px)` });
 
 	function setAttributeId() {
-		templateStore.setCurrentAttributeId(props.id);
+		templateStore.setSelectedAttributeId(props.id);
 	}
 
-	function isCurrentAttribute() {
-		return templateStore.currentAttributeId == props.id;
+	function isSelectedAttribute() {
+		return templateStore.selectedAttributeId == props.id;
 	} /* 
-	let isCurrentAttribute = ref(templateStore.currentAttributeId == props.id); */
+	let isSelectedAttribute = ref(templateStore.selectedAttributeId == props.id); */
 </script>
 <style lang="scss">
 	svg {

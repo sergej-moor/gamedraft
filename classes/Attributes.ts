@@ -13,8 +13,6 @@ class Attribute {
 	setId(id:Number){ 
 		this.id = id;
 	}
-
-
 }
 
 class Textfield extends Attribute {
@@ -23,7 +21,6 @@ class Textfield extends Attribute {
 		super(name);
 		this.value = value;
 		this.type = "text";
-
 	}
 	
 
@@ -35,9 +32,6 @@ class Numberfield extends Attribute {
 		this.value = value;
 		this.type = "number";
 	}
-	
-
 }
-
 
 export { Attribute, Textfield, Numberfield };

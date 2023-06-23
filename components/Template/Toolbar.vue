@@ -1,11 +1,10 @@
 <template lang="">
 	<div class="min-w-full">
 		<ul class="flex rounded-box bg-gray-400 rounded-r rounded-b p-1 min-w-full">
-			<li v-tooltip="'Add a text attribute'">
+			<li v-tooltip="'New Text Attribute'">
 				<button
 					class="btn"
 					@click="addTextFieldAttribute"
-					v-tooltip="'Add a text attribute'"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +23,7 @@
 				</button>
 			</li>
 
-			<li v-tooltip="'Add a number attribute'">
+			<li v-tooltip="'New Number Attribute'">
 				<button class="btn" @click="addNumberFieldAttribute">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -43,8 +42,27 @@
 				</button>
 			</li>
 
-			<li v-tooltip="'Add a child template'">
-				<button class="btn" @click="addChildTemplate">
+			<li v-tooltip="'New Child Template'">
+				<button class="btn" @click="addChild">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-6 h-6"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
+						/>
+					</svg>
+				</button>
+			</li>
+
+			<li v-tooltip="'Delete Template'">
+				<button class="btn" @click="deleteTemplate">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -87,12 +105,12 @@
 		Attribute,
 		Numberfield,
 		Textfield,
-	} from "~~/helpers/attributeClasses";
+	} from "~~/classes/Attributes";
 
 	import { useTemplateStore } from "@/stores/template";
 
 	const templateStore = useTemplateStore();
-	const { addAttribute, addTemplate } = templateStore;
+	const { addAttribute, addTemplate, deleteCurrentTemplate} = templateStore;
 
 	function addTextFieldAttribute() {
 		let att = new Textfield("Surname", "Cornelius");
@@ -104,7 +122,14 @@
 		addAttribute(att);
 	}
 
-	function addChildTemplate() {
+	function addChild() {
 		addTemplate();
 	}
+
+	function deleteTemplate() {
+		deleteCurrentTemplate();
+	}
+
+	
 </script>
+~~/classes/Attributes

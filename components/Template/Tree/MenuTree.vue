@@ -2,31 +2,31 @@
 	<div class="bg-gray-400 rounded-t">
 		<h2 class="text-lg text-center m-2">Template Tree</h2>
 		<TemplateTreeSearchbar></TemplateTreeSearchbar>
-		<button class="btn" @click="addContentPage()">
-			Add ContentPage to current Template
+		<button class="btn" @click="addEntry()">
+			Add Entry to current Template
 		</button>
 
 		<TemplateTreeMenuItemTemplate
 			:name="templateTree.name"
-			:childTemplates="templateTree.childTemplates"
+			:children="templateTree.children"
 			:depth="0"
 			:attributes="templateTree.attributes"
 			:templateId="templateTree.id"
-			:contentPages="templateTree.contentPages"
+			:entries="templateTree.entries"
 		>
 		</TemplateTreeMenuItemTemplate>
 	</div>
 </template>
 <script setup>
 	import { useTemplateStore } from "~~/stores/template";
-	import { ContentPage } from "~~/helpers/contentPageClass";
+	import Entry from "~~/classes/Entry";
 	const templateStore = useTemplateStore();
 	const templateTree = ref(templateStore.rootTemplate);
 
-	function addContentPage() {
-		let content = new ContentPage("hallo");
+	function addEntry() {
+		let content = new Entry("hallo");
 		console.log("addContent Page");
-		templateStore.addContentPage(content);
+		templateStore.addEntry(content);
 	}
 
 	function onPressW() {
@@ -40,18 +40,18 @@
 			{ name: "Textfield1", type: "Text" },
 			{ name: "Textfield2", type: "Text" },
 		],
-		childTemplates: [
+		children: [
 			{
 				name: "item1",
 
-				childTemplates: [
+				children: [
 					{
 						name: "item1.1",
 						attributes: [{ name: "233", type: "Number" }],
 					},
 					{
 						name: "item1.2",
-						childTemplates: [
+						children: [
 							{
 								name: "item1.2.1",
 								attributes: [{ name: "Textfi233", type: "Text" }],
@@ -68,3 +68,4 @@
 	//const templateStore = useTemplateStore();
 	//const templateTree = toRef(templateStore.value);
 </script>
+~~/classes/Entry~~/classes/Entry

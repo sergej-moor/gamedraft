@@ -12,23 +12,23 @@
 		</div>
 		<div class="preview" v-else>
 			Content Editor stuff
-			<ContentPage></ContentPage>
+			<Entry/>
 		</div>
 
 		<TemplateAttributeInspector
-			:name="templateStore.currentAttribute.name"
-			:id="templateStore.currentAttribute.id"
-			:type="templateStore.currentAttribute.type"
+			:name="templateStore.selectedAttribute.name"
+			:id="templateStore.selectedAttribute.id"
+			:type="templateStore.selectedAttribute.type"
 			class="attribute__inspector"
 		></TemplateAttributeInspector>
 	</div>
 </template>
 <script setup>
 	import { useTemplateStore } from "@/stores/template";
-	import { Textfield, Numberfield } from "../helpers/attributeClasses";
+	import { Textfield, Numberfield } from "../classes/Attributes";
 
 	const templateStore = ref(useTemplateStore());
-	//const currentAttribute = ref(useTemplateStore().);
+	//const selectedAttribute = ref(useTemplateStore().);
 </script>
 <style lang="scss" scoped>
 	.page {

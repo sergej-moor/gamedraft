@@ -5,11 +5,11 @@
 				link: true,
 				flex: true,
 				'link-hover': true,
-				'link-secondary': isCurrentContentPage(),
+				'link-secondary': isSelectedEntry(),
 			}"
-			@click="setContentPageId()"
+			@click="setEntryId()"
 		>
-			<IconContentPage></IconContentPage>
+			<IconEntry></IconEntry>
 			<div class="self-center ml-1">{{ name }}</div></a
 		>
 	</div>
@@ -30,15 +30,14 @@
 	const depth = toRef(props, "depth");
 	const ind = ref({ transform: `translate(${depth.value * 20 + 35}px)` });
 
-	function setContentPageId() {
-		templateStore.setCurrentContentPageId(props.id);
-		console.log(templateStore.currentContentPage);
+	function setEntryId() {
+		templateStore.setselectedEntryId(props.id);
 	}
 
-	function isCurrentContentPage() {
-		return templateStore.currentContentPageId == props.id;
+	function isSelectedEntry() {
+		return templateStore.selectedEntryId == props.id;
 	} /* 
-	let isCurrentAttribute = ref(templateStore.currentAttributeId == props.id); */
+	let isSelectedAttribute = ref(templateStore.selectedAttributeId == props.id); */
 </script>
 <style lang="scss">
 	svg {

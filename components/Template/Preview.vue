@@ -1,6 +1,6 @@
 <template>
 	<div class="bg-gray-600 p-2 mt-2 rounded h-full overflow-y-scroll">
-		<TemplateBreadcrumb :templateList="templateList"></TemplateBreadcrumb>
+		<TemplateBreadcrumb :templateList="templateList"/>
 
 		<div class="w-full text-3xl font-semibold">Template</div>
 
@@ -10,7 +10,7 @@
 				:placeholder="name"
 				:value="name"
 				@input="(event) => updateTemplateName(event.target.value)"
-				class="bg-gray-600 rounded-sm w-fit text-sm border-none px-1"
+				class="bg-gr<ay-600 rounded-sm w-fit text-sm border-none px-1"
 			/>
 		</UtilityDivider>
 
@@ -19,7 +19,7 @@
 				<TemplateAttribute
 					:attribute="attribute"
 					@delete="deleteAttribute"
-				></TemplateAttribute>
+				/>
 			</li>
 		</ol>
 	</div>

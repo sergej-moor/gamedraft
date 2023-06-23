@@ -1,6 +1,6 @@
-import {Attribute} from "./attributeClasses";
+import {Attribute} from "./Attributes";
 
-class ContentPage{
+export default class Entry{
     name: String
     id: Number
     attributes: Attribute[]
@@ -17,5 +17,3 @@ class ContentPage{
 	}
 
 }
-
-export {ContentPage}

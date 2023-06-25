@@ -1,7 +1,7 @@
 <template lang="">
-	<div>Hallo Welt</div>
+  <div>Hallo Welt</div>
 </template>
 <script>
-	export default {};
+export default {};
 </script>
 <style lang=""></style>

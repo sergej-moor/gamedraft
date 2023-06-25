@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { Attribute } from "~~/classes/Attributes";
 import Template from "../classes/Template";
+import { Attribute } from "~~/classes/Attributes";
 import Entry from "~~/classes/Entry";
 
 export const useTemplateStore = defineStore("template", {
@@ -31,7 +31,7 @@ export const useTemplateStore = defineStore("template", {
      * @returns parents of current template in ordered array starting with root
      */
     getParentsOfCurrent: (state): Template[] | null => {
-      let getParentsOfTemplate = function (
+      const getParentsOfTemplate = function (
         current: Template
       ): Template[] | null {
         if (current.id === state.selectedTemplateId || !current.children.length)
@@ -45,7 +45,7 @@ export const useTemplateStore = defineStore("template", {
           return [current];
 
         for (let i = 0; i < current.children.length; i++) {
-          let branchesToChild = getParentsOfTemplate(current.children[i]);
+          const branchesToChild = getParentsOfTemplate(current.children[i]);
 
           if (branchesToChild) return [current, ...branchesToChild];
         }
@@ -61,14 +61,14 @@ export const useTemplateStore = defineStore("template", {
      * @returns object of currently selected template
      */
     currentTemplate: (state): Template | null => {
-      let findCurrentTemplate = function (): Template | null {
+      const findCurrentTemplate = function (): Template | null {
         const stack: Template[] = [];
         stack.push(state.root);
 
         while (stack.length > 0) {
           const current = stack.pop();
 
-          if (current?.id == state.selectedTemplateId) return current;
+          if (current?.id === state.selectedTemplateId) return current;
 
           if (current?.children.length) stack.push(...current.children);
         }
@@ -115,21 +115,21 @@ export const useTemplateStore = defineStore("template", {
       entry.name = "entry" + this.lastEntryId.toString();
       this.currentTemplate!.entries.push(entry);
 
-      //TODO add the attributes from the current template to this contentpage
-      //if a default value is set, set it to the inital "value"-prop from the attribute-object
+      // TODO add the attributes from the current template to this contentpage
+      // if a default value is set, set it to the inital "value"-prop from the attribute-object
     },
 
     deleteCurrentTemplate(
       deleteChildren?: boolean,
       mergeAttributesDown?: boolean
     ): boolean {
-      let parents = this.getParentsOfCurrent;
+      const parents = this.getParentsOfCurrent;
 
       if (parents) {
-        let siblings: Template[] = parents[parents.length - 1].children.filter(
-          (child) => child !== this.currentTemplate
-        );
-        let children = this.currentTemplate?.children ?? [];
+        const siblings: Template[] = parents[
+          parents.length - 1
+        ].children.filter((child) => child !== this.currentTemplate);
+        const children = this.currentTemplate?.children ?? [];
 
         if (mergeAttributesDown) {
           children.forEach((child) => {
@@ -137,7 +137,7 @@ export const useTemplateStore = defineStore("template", {
           });
         }
 
-        let newChildren = [...siblings, ...children];
+        const newChildren = [...siblings, ...children];
         parents[parents.length - 1].children = deleteChildren
           ? siblings
           : newChildren;
@@ -182,17 +182,17 @@ export const useTemplateStore = defineStore("template", {
 
     setselectedEntryId(id: number) {
       this.selectedEntryId = id;
-      //console.log("set selectedEntry ID to " + this.selectedEntryId);
+      // console.log("set selectedEntry ID to " + this.selectedEntryId);
 
       this.showContentEditor = true;
     },
 
     updateEntryAttributes() {
-      //TODO make sure that the content page has the same attributes as the template while remaining the filled in data
+      // TODO make sure that the content page has the same attributes as the template while remaining the filled in data
       this.selectedEntry.attributes = this.currentTemplate!.attributes;
     },
 
-    //TODO add functions that update the attribute-objects "value"-prop in the current entry
+    // TODO add functions that update the attribute-objects "value"-prop in the current entry
     // wichtig: number-attribute haben einen min und max-wert, auf den geclampt werden muss wenn der gesetzt ist
 
     /* --- ATTRIBUTES --- */
@@ -220,7 +220,7 @@ export const useTemplateStore = defineStore("template", {
     },
 
     updateAttributeName(attributeId: Number, newName: String) {
-      this.currentTemplate!.attributes.forEach((att, index) => {
+      this.currentTemplate!.attributes.forEach((att, _index) => {
         if (att.id === attributeId) {
           att.name = newName;
         }
@@ -228,7 +228,7 @@ export const useTemplateStore = defineStore("template", {
     },
 
     updateSelectedAttributeName(newName: String) {
-      this.currentTemplate!.attributes.forEach((att, index) => {
+      this.currentTemplate!.attributes.forEach((att, _index) => {
         if (att.id === this.selectedAttributeId) {
           att.name = newName;
         }
@@ -238,7 +238,7 @@ export const useTemplateStore = defineStore("template", {
     /* --- TEMPLATES --- */
     addTemplate() {
       this.lastTemplateId += 1;
-      let template = new Template(
+      const template = new Template(
         "Template_" + this.lastTemplateId,
         this.lastTemplateId
       );

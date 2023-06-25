@@ -1,9 +1,9 @@
 <template>
   <div>
     <VueSimpleContextMenu
+      ref="vueSimpleContextMenu"
       :element-id="templateId.toString()"
       :options="options"
-      ref="vueSimpleContextMenu"
       @option-clicked="optionClicked"
     />
 
@@ -28,9 +28,9 @@
         :style="ind"
       >
         <UtilityExpandButton
-          @click="showChildren = !showChildren"
           v-if="true"
           :expanded="showChildren"
+          @click="showChildren = !showChildren"
         ></UtilityExpandButton>
         <div v-else class="m-1"></div>
         <div class="self-center">{{ name }}</div>
@@ -48,39 +48,40 @@
 		></TemplateMenuItemAttribute> -->
 
     <!-- Render Content Pages -->
-    <TemplateTreeMenuItemEntry
-      v-if="showChildren"
-      v-for="content in entries"
-      :name="content.name"
-      :depth="depth"
-      :id="content.id"
-    >
-    </TemplateTreeMenuItemEntry>
+    <div v-if="showChildren">
+      <TemplateTreeMenuItemEntry
+        v-for="(content, index) in entries"
+        :id="content.id"
+        :key="index"
+        :name="content.name"
+        :depth="depth"
+      >
+      </TemplateTreeMenuItemEntry>
+    </div>
 
     <!-- Render child templates -->
-    <TemplateTreeMenuItemTemplate
-      v-if="showChildren"
-      v-for="node in children"
-      :children="node.children"
-      :name="node.name"
-      :depth="depth + 1"
-      :attributes="node.attributes"
-      :templateId="node.id"
-      :entries="node.entries"
-    />
+    <div v-if="showChildren">
+      <TemplateTreeMenuItemTemplate
+        v-for="(node, index) in children"
+        :key="index"
+        :children="node.children"
+        :name="node.name"
+        :depth="depth + 1"
+        :attributes="node.attributes"
+        :template-id="node.id"
+        :entries="node.entries"
+      />
+    </div>
 
     <slot></slot>
   </div>
 </template>
-<script>
-export default {
-  name: "MenuItem",
-};
-</script>
+<script></script>
 <script setup>
-import { useTemplateStore } from "~~/stores/template";
 import VueSimpleContextMenu from "vue-simple-context-menu";
 import { ref } from "vue";
+import { useTemplateStore } from "~~/stores/template";
+
 const templateStore = useTemplateStore();
 const props = defineProps({
   name: String,
@@ -92,33 +93,29 @@ const props = defineProps({
 });
 const name = toRef(props, "name");
 const children = toRef(props, "children");
-const attributes = toRef(props, "attributes");
+
 const templateId = toRef(props, "templateId");
 const entries = toRef(props, "entries");
-let showChildren = ref(true);
+const showChildren = ref(true);
 
 function isCurrentTemplate() {
   return templateId.value === templateStore.selectedTemplateId;
 }
 
-function toggleChildren() {
-  showChildren.value = !showChildren.value;
-}
-
-const childrenExist = ref(
+/* const childrenExist = ref(
   children.value != undefined && children.value.length > 0
-);
+); */
 
 function selectTemplate() {
   templateStore.setSelectedTemplateId(templateId.value);
 
-  //console.clear();
-  //console.log(templateStore.getParentsOfCurrent)
+  // console.clear();
+  // console.log(templateStore.getParentsOfCurrent)
 }
 
 /* CONTEXT MENU */
 
-let deleteDialog = ref(false);
+const deleteDialog = ref(false);
 
 const options = [
   {
@@ -140,11 +137,11 @@ const options = [
 const vueSimpleContextMenu = ref(null);
 
 function showContextMenu(event) {
-  //console.log(vueSimpleContextMenu.value);
+  // console.log(vueSimpleContextMenu.value);
 
-  let menus = document.getElementsByClassName("vue-simple-context-menu");
-  //console.log("MENUS");
-  //console.log(menus);
+  const menus = document.getElementsByClassName("vue-simple-context-menu");
+  // console.log("MENUS");
+  // console.log(menus);
 
   Array.from(menus).forEach((menu) => {
     menu.classList.remove("vue-simple-context-menu--active");
@@ -153,9 +150,9 @@ function showContextMenu(event) {
 }
 
 function optionClicked(event) {
-  //window.alert(JSON.stringify(event));
-  if (event.option.slug == "delete") {
-    //templateStore.deleteCurrentTemplate(templateId.value);
+  // window.alert(JSON.stringify(event));
+  if (event.option.slug === "delete") {
+    // templateStore.deleteCurrentTemplate(templateId.value);
     deleteDialog.value = true;
   }
 }

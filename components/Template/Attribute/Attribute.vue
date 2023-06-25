@@ -1,14 +1,24 @@
 <template>
-	<div class="flex my-1 rounded px-1" :class="{
-		'bg-blue-500': isSelectedAttribute(),
-	}" @click="setAttributeId()">
-		<!-- single line TEXTFIELD  -->
-		<div class="flex">
-			<TemplateAttributeTextInput v-if="attribute.type == 'text'" :title="attribute.name"
-				@updateTitle="updateAttributeTitle"/>
-			<TemplateAttributeNumberInput v-else-if="attribute.type == 'number'" :title="attribute.name"
-				@updateTitle="updateAttributeTitle"/>
-			<!-- <div v-if="attribute.type == 'text'" class="flex-1 w-full">
+  <div
+    class="flex my-1 rounded px-1"
+    :class="{
+      'bg-blue-500': isSelectedAttribute(),
+    }"
+    @click="setAttributeId()"
+  >
+    <!-- single line TEXTFIELD  -->
+    <div class="flex">
+      <TemplateAttributeTextInput
+        v-if="attribute.type == 'text'"
+        :title="attribute.name"
+        @updateTitle="updateAttributeTitle"
+      />
+      <TemplateAttributeNumberInput
+        v-else-if="attribute.type == 'number'"
+        :title="attribute.name"
+        @updateTitle="updateAttributeTitle"
+      />
+      <!-- <div v-if="attribute.type == 'text'" class="flex-1 w-full">
 				<span class="w-full flex">
 					<input
 						class="input input-xs input-ghost w-full"
@@ -28,11 +38,14 @@
 				</label>
 			</div> -->
 
-			<div v-else>Unknown Attribute Type called {{ attribute.type }}</div>
-			<TemplateAttributeDeleteButton class="justify-self-end" @deleteAttribute="handleDelete()">
-			</TemplateAttributeDeleteButton>
-		</div>
-	</div>
+      <div v-else>Unknown Attribute Type called {{ attribute.type }}</div>
+      <TemplateAttributeDeleteButton
+        class="justify-self-end"
+        @deleteAttribute="handleDelete()"
+      >
+      </TemplateAttributeDeleteButton>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -43,27 +56,27 @@ const templateStore = useTemplateStore();
 const { updateAttributeName } = templateStore;
 
 const props = defineProps({
-	attribute: Attribute,
+  attribute: Attribute,
 });
 const attribute = toRef(props, "attribute");
 
 const id = ref(attribute.value.id);
 const emit = defineEmits(["delete", "update:title"]);
 const handleDelete = ref(() => {
-	emit("delete", attribute.value.id);
+  emit("delete", attribute.value.id);
 });
 
 function updateAttributeTitle(newTitle) {
-	templateStore.setSelectedAttributeId(id.value);
-	updateAttributeName(id.value, newTitle);
+  templateStore.setSelectedAttributeId(id.value);
+  updateAttributeName(id.value, newTitle);
 }
 
 function setAttributeId() {
-	templateStore.setSelectedAttributeId(id.value);
+  templateStore.setSelectedAttributeId(id.value);
 }
 
 function isSelectedAttribute() {
-	return templateStore.selectedAttributeId == id.value;
+  return templateStore.selectedAttributeId == id.value;
 }
 </script>
 ~~/classes/Attributes

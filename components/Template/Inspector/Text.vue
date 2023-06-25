@@ -1,7 +1,7 @@
 <template lang="">
-	<div>Text Attribut Settings</div>
+  <div>Text Attribut Settings</div>
 </template>
 <script>
-	export default {};
+export default {};
 </script>
 <style lang=""></style>

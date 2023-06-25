@@ -1,4 +1,4 @@
-import { defineStore} from "pinia";
+import { defineStore } from "pinia";
 import { Attribute } from "~~/classes/Attributes";
 import Template from "../classes/Template";
 import Entry from "~~/classes/Entry";
@@ -27,31 +27,33 @@ export const useTemplateStore = defineStore("template", {
 
     /**
      * Recursively determines all parent templates of the currently selected template
-     * Does not contain the current template itself as that would be redundant 
+     * Does not contain the current template itself as that would be redundant
      * @returns parents of current template in ordered array starting with root
      */
     getParentsOfCurrent: (state): Template[] | null => {
-        let getParentsOfTemplate = function (
-            current: Template,
-        ): Template[] | null {
-            
-            if (current.id === state.selectedTemplateId || !current.children.length)
-                return null;
-        
-            if (current.children.find(child => child.id === state.selectedTemplateId))
-                return [current];
-        
-            for (let i = 0; i < current.children.length; i++) {
-                let branchesToChild = getParentsOfTemplate(current.children[i]);
-        
-                if (branchesToChild) 
-                    return [current, ...branchesToChild];
-            }
-        
-            return null;
-        };
+      let getParentsOfTemplate = function (
+        current: Template
+      ): Template[] | null {
+        if (current.id === state.selectedTemplateId || !current.children.length)
+          return null;
 
-        return getParentsOfTemplate(state.root);
+        if (
+          current.children.find(
+            (child) => child.id === state.selectedTemplateId
+          )
+        )
+          return [current];
+
+        for (let i = 0; i < current.children.length; i++) {
+          let branchesToChild = getParentsOfTemplate(current.children[i]);
+
+          if (branchesToChild) return [current, ...branchesToChild];
+        }
+
+        return null;
+      };
+
+      return getParentsOfTemplate(state.root);
     },
 
     /**
@@ -59,26 +61,25 @@ export const useTemplateStore = defineStore("template", {
      * @returns object of currently selected template
      */
     currentTemplate: (state): Template | null => {
-        
-        let findCurrentTemplate = function (): Template | null {
-            const stack : Template[] = [];
-            stack.push(state.root);
+      let findCurrentTemplate = function (): Template | null {
+        const stack: Template[] = [];
+        stack.push(state.root);
 
-            while (stack.length > 0) {
-                const current = stack.pop();
+        while (stack.length > 0) {
+          const current = stack.pop();
 
-                if (current?.id == state.selectedTemplateId)
-                   return current;
+          if (current?.id == state.selectedTemplateId) return current;
 
-                if (current?.children.length) 
-                    stack.push(...current.children);
-            }
-
-            console.error(`Couldn't find template with id: ${state.selectedTemplateId}!`);
-            return null;
+          if (current?.children.length) stack.push(...current.children);
         }
 
-        return findCurrentTemplate();
+        console.error(
+          `Couldn't find template with id: ${state.selectedTemplateId}!`
+        );
+        return null;
+      };
+
+      return findCurrentTemplate();
     },
 
     /**
@@ -86,7 +87,11 @@ export const useTemplateStore = defineStore("template", {
      * @returns currently selected Attribute and default attribute if null
      */
     selectedAttribute(state): Attribute {
-        return this.currentTemplate?.attributes.find(att => att.id === state.selectedAttributeId) ?? new Attribute("default");
+      return (
+        this.currentTemplate?.attributes.find(
+          (att) => att.id === state.selectedAttributeId
+        ) ?? new Attribute("default")
+      );
     },
 
     /**
@@ -94,9 +99,12 @@ export const useTemplateStore = defineStore("template", {
      * @returns currently selected content page and default page if null
      */
     selectedEntry(state): Entry {
-      return this.currentTemplate?.entries.find(page => page.id === state.selectedEntryId) ?? new Entry("entry");
+      return (
+        this.currentTemplate?.entries.find(
+          (page) => page.id === state.selectedEntryId
+        ) ?? new Entry("entry")
+      );
     },
-
   },
   actions: {
     /* CONTENT PAGES */
@@ -111,28 +119,35 @@ export const useTemplateStore = defineStore("template", {
       //if a default value is set, set it to the inital "value"-prop from the attribute-object
     },
 
-    deleteCurrentTemplate(deleteChildren? : boolean, mergeAttributesDown? : boolean): boolean {
-        let parents = this.getParentsOfCurrent;
+    deleteCurrentTemplate(
+      deleteChildren?: boolean,
+      mergeAttributesDown?: boolean
+    ): boolean {
+      let parents = this.getParentsOfCurrent;
 
-        if (parents) {
-            let siblings: Template[] = parents[parents.length - 1].children.filter(child => child !== this.currentTemplate);
-            let children = this.currentTemplate?.children ?? [];
+      if (parents) {
+        let siblings: Template[] = parents[parents.length - 1].children.filter(
+          (child) => child !== this.currentTemplate
+        );
+        let children = this.currentTemplate?.children ?? [];
 
-            if (mergeAttributesDown) {
-                children.forEach(child => {
-                    child.attributes.push(...this.currentTemplate?.attributes ?? []);
-                });
-            }
-
-            let newChildren = [...siblings, ...children];
-            parents[parents.length - 1].children = deleteChildren ? siblings: newChildren;
-            
-            this.selectedTemplateId = parents[parents?.length - 1].id.valueOf();
-            return true;
-        } else {
-            console.error("Cannot delete root template.");
-            return false;
+        if (mergeAttributesDown) {
+          children.forEach((child) => {
+            child.attributes.push(...(this.currentTemplate?.attributes ?? []));
+          });
         }
+
+        let newChildren = [...siblings, ...children];
+        parents[parents.length - 1].children = deleteChildren
+          ? siblings
+          : newChildren;
+
+        this.selectedTemplateId = parents[parents?.length - 1].id.valueOf();
+        return true;
+      } else {
+        console.error("Cannot delete root template.");
+        return false;
+      }
     },
 
     /* deleteTemplateById(id : Number): boolean {

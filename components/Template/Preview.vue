@@ -1,49 +1,52 @@
 <template>
-	<div class="bg-gray-600 p-2 mt-2 rounded h-full overflow-y-scroll">
-		<TemplateBreadcrumb :templateList="templateList"/>
+  <div
+    class="rounded px-2 my-2"
+    :class="{
+      'bg-gray-600': !activated,
+    }"
+  >
+    <UtilityDivider @toggleVisibility="toggleVisibility">
+      <input
+        type="text"
+        :placeholder="name"
+        :value="name"
+        @input="(event) => updateTemplateName(event.target.value)"
+        class="bg-gray-600 rounded-sm w-fit text-sm font-semibold border-none px-1 text-black"
+      />
+    </UtilityDivider>
 
-		<div class="w-full text-3xl font-semibold">Template</div>
-
-		<UtilityDivider>
-			<input
-				type="text"
-				:placeholder="name"
-				:value="name"
-				@input="(event) => updateTemplateName(event.target.value)"
-				class="bg-gr<ay-600 rounded-sm w-fit text-sm border-none px-1"
-			/>
-		</UtilityDivider>
-
-		<ol class="w-full">
-			<li v-for="attribute in attributes">
-				<TemplateAttribute
-					:attribute="attribute"
-					@delete="deleteAttribute"
-				/>
-			</li>
-		</ol>
-	</div>
+    <ol class="w-full" v-if="visible">
+      <li v-for="attribute in attributes">
+        <TemplateAttribute :attribute="attribute" @delete="deleteAttribute" />
+      </li>
+    </ol>
+  </div>
 </template>
 <script setup>
-	import { useTemplateStore } from "@/stores/template";
+import { useTemplateStore } from "@/stores/template";
 
-	const props = defineProps({
-		attributes: Array,
-		name: String,
-	});
-	const name = toRef(props, "name");
-	const templateStore = useTemplateStore();
+const props = defineProps({
+  attributes: Array,
+  name: String,
+  activated: Boolean,
+});
+const name = toRef(props, "name");
+const templateStore = useTemplateStore();
 
-	function deleteAttribute(id) {
-		templateStore.deleteAttribute(id);
-	}
+function deleteAttribute(id) {
+  templateStore.deleteAttribute(id);
+}
 
-	function updateTemplateName(newName) {
-		templateStore.updateCurrentTemplateName(newName);
-	}
+function updateTemplateName(newName) {
+  templateStore.updateCurrentTemplateName(newName);
+}
 
-	const attributes = toRef(props, "attributes");
+let visible = ref(true);
+function toggleVisibility(isVisible) {
+  console.log(isVisible);
+  visible.value = isVisible;
+}
 
-	const templateList = [{ title: "Sword" }, { title: "Katana" }];
+const attributes = toRef(props, "attributes");
 </script>
 <style lang=""></style>

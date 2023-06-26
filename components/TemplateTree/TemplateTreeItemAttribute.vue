@@ -20,10 +20,10 @@ import { useTemplateStore } from "@/stores/template";
 const templateStore = useTemplateStore();
 
 const props = defineProps({
-  name: String,
-  type: String,
-  id: Number,
-  depth: Number,
+  name: { type: String, default: "" },
+  type: { type: String, default: "" },
+  id: { type: Number, default: -1 },
+  depth: { type: Number, default: -1 },
 });
 
 const name = toRef(props, "name");

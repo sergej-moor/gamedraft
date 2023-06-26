@@ -2,7 +2,7 @@
   <div class="flex gap-1 px-2">
     <UtilityVisibilityToggle
       :visible="visible"
-      @toggleVisibility="toggleVisibility"
+      @toggle-visibility="toggleVisibility"
     ></UtilityVisibilityToggle>
     <slot></slot>
     <div class="w-full flex flex-col justify-center">

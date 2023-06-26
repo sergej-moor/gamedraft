@@ -4,7 +4,7 @@
   </div>
 </template>
 <!-- @click="$emit("pressButton")" -->
-<script>
-export default {};
+<script setup>
+defineEmits(["pressButton"]);
 </script>
 <style lang=""></style>

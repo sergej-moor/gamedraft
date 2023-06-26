@@ -1,6 +1,6 @@
 <template lang="">
   <div class="w-auto bg-slate-700 flex flex-col sidebar">
-    <UtilitySidebarButton @pressButton="logToConsole()"
+    <UtilitySidebarButton @press-button="logToConsole()"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -32,7 +32,7 @@
         />
       </svg>
     </UtilitySidebarButton>
-    <UtilitySidebarButton @pressButton="importTemplate()"
+    <UtilitySidebarButton @press-button="importTemplate()"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -48,7 +48,7 @@
         />
       </svg>
     </UtilitySidebarButton>
-    <UtilitySidebarButton @pressButton="exportTemplate()"
+    <UtilitySidebarButton @press-button="exportTemplate()"
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

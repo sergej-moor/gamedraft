@@ -21,6 +21,7 @@
   </div>
 </template>
 <script setup>
+defineEmits(["updateTitle"]);
 const props = defineProps({
   title: { type: String, default: "" },
 });

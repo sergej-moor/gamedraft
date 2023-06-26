@@ -19,7 +19,12 @@
 import { Attribute } from "~~/classes/Attributes";
 
 const props = defineProps({
-  attribute: Attribute,
+  attribute: {
+    type: Attribute,
+    default() {
+      return {};
+    },
+  },
 });
 
 const attribute = toRef(props, "attribute");

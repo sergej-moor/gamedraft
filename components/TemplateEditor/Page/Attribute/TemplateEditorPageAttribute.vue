@@ -18,25 +18,6 @@
         :title="attribute.name"
         @update-title="updateAttributeTitle"
       />
-      <!-- <div v-if="attribute.type == 'text'" class="flex-1 w-full">
-				<span class="w-full flex">
-					<input
-						class="input input-xs input-ghost w-full"
-						type="text"
-						placeholder="Attribute name"
-						:value="title"
-						@input="(event) => updateAttributeTitle(event.target.value)"
-					/>
-					<IconEdit></IconEdit>
-				</span>
-				<label class="input-group input-group-xs input-group-vertical w-full">
-					<input
-						type="text"
-						placeholder="Text input"
-						class="input input-bordered input-xs"
-					/>
-				</label>
-			</div> -->
 
       <div v-else>Unknown Attribute Type called {{ attribute.type }}</div>
       <TemplateEditorPageAttributeDeleteButton
@@ -56,7 +37,12 @@ const templateStore = useTemplateStore();
 const { updateAttributeName } = templateStore;
 
 const props = defineProps({
-  attribute: Attribute,
+  attribute: {
+    type: Attribute,
+    default() {
+      return {};
+    },
+  },
 });
 const attribute = toRef(props, "attribute");
 

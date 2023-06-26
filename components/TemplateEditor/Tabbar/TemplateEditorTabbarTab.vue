@@ -12,8 +12,8 @@ import { useTemplateStore } from "~~/stores/template";
 const templateStore = useTemplateStore();
 
 const props = defineProps({
-  name: String,
-  tabIndex: Number,
+  name: { type: String, default: "" },
+  tabIndex: { type: Number, default: -1 },
 });
 
 function switchtab() {

@@ -1,5 +1,5 @@
 <template lang="">
-  <div @click="$emit('toggleVisibility')" class="flex content-center flex-wrap">
+  <div class="flex content-center flex-wrap" @click="$emit('toggleVisibility')">
     <svg
       v-if="visible"
       xmlns="http://www.w3.org/2000/svg"
@@ -42,6 +42,7 @@
 const props = defineProps({
   visible: Boolean,
 });
+defineEmits(["toggleVisibility"]);
 const visible = toRef(props, "visible");
 </script>
 <style lang=""></style>

@@ -30,9 +30,10 @@
   </div>
 </template>
 <script setup>
+defineEmits(["updateValue"]);
 const props = defineProps({
-  title: String,
-  inputVal: String,
+  title: { type: String, default: "" },
+  inputVal: { type: String, default: "" },
 });
 
 const title = toRef(props, "title");

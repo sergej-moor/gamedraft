@@ -2,7 +2,7 @@
   <div>
     <div class="text-sm my-1 breadcrumbs text-gray-100">
       <ul class="flex">
-        <li class="mx-1" v-for="(template, index) in templates" :key="index">
+        <li v-for="(template, index) in templates" :key="index" class="mx-1">
           <span v-if="index != 0"> > </span
           ><a
             class="hover:underline hover:cursor-pointer"
@@ -20,7 +20,12 @@ import { useTemplateStore } from "~~/stores/template";
 const templateStore = useTemplateStore();
 
 const props = defineProps({
-  templateList: Array,
+  templateList: {
+    type: Array,
+    default() {
+      return [];
+    },
+  },
 });
 const templates = toRef(props, "templateList");
 

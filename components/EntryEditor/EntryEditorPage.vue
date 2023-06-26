@@ -18,9 +18,14 @@
 </template>
 <script setup>
 const props = defineProps({
-  name: String,
-  id: Number,
-  attributes: Array,
+  name: { type: String, default: "" },
+  id: { type: Number, default: -1 },
+  attributes: {
+    type: Array,
+    default() {
+      return [];
+    },
+  },
 });
 
 const name = toRef(props, "name");

@@ -3,7 +3,7 @@
     <div class="">
       <TemplateEditorTabbarTab
         name="Test"
-        :tabIndex="99"
+        :tab-index="99"
       ></TemplateEditorTabbarTab>
     </div>
   </div>

@@ -74,12 +74,27 @@ import { useTemplateStore } from "~~/stores/template";
 
 const templateStore = useTemplateStore();
 const props = defineProps({
-  name: String,
-  children: Array,
-  depth: Number,
-  attributes: Array,
-  templateId: Number,
-  entries: Array,
+  name: { type: String, default: "" },
+  children: {
+    type: Array,
+    default() {
+      return [];
+    },
+  },
+  depth: { type: Number, default: -1 },
+  attributes: {
+    type: Array,
+    default() {
+      return [];
+    },
+  },
+  templateId: { type: Number, default: -1 },
+  entries: {
+    type: Array,
+    default() {
+      return [];
+    },
+  },
 });
 const name = toRef(props, "name");
 const children = toRef(props, "children");

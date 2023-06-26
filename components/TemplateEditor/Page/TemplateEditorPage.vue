@@ -2,7 +2,7 @@
   <div class="bg-gray-600 p-2 mt-2 rounded h-full overflow-y-scroll">
     <button @click="testoutput">hey</button>
     <TemplateEditorPageBreadcrumb
-      :templateList="templateStore.getParentsOfCurrent"
+      :template-list="templateStore.getParentsOfCurrent"
     />
     <div class="w-full text-3xl font-semibold">Templates</div>
     <TemplateEditorPageSection

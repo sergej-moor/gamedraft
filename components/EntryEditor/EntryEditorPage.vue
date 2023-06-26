@@ -11,7 +11,7 @@
 
     <ol>
       <li v-for="(attribute, index) in attributes" :key="index">
-        <EntryAttribute :attribute="attribute" />
+        <EntryEditorAttribute :attribute="attribute" />
       </li>
     </ol>
   </div>

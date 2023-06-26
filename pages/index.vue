@@ -12,7 +12,7 @@
     </div>
     <div v-else class="preview">
       Content Editor stuff
-      <Entry />
+      <EntryEditorPage />
     </div>
 
     <AttributeInspector

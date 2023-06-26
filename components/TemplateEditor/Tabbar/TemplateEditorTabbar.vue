@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="">
-      <TemplateTabbarTab name="Test" :tabIndex="99"></TemplateTabbarTab>
+      <TemplateEditorTabbarTab
+        name="Test"
+        :tabIndex="99"
+      ></TemplateEditorTabbarTab>
     </div>
   </div>
 </template>

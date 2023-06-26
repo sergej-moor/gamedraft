@@ -1,15 +1,15 @@
 <template lang="">
   <div class="form-control flex my-1">
     <div class="flex">
-      <EntryNumberInput
+      <EntryAttributeNumberInput
         v-if="attribute.type == 'number'"
         :title="attribute.name"
-        :inputVal="attribute.value"
+        :input-val="attribute.value"
       />
-      <EntryTextInput
+      <EntryAttributeTextInput
         v-if="attribute.type == 'text'"
         :title="attribute.name"
-        :inputVal="attribute.value"
+        :input-val="attribute.value"
       />
       <div v-else>Unknown Attribute type called {{ attribute.type }}</div>
     </div>
@@ -25,4 +25,3 @@ const props = defineProps({
 const attribute = toRef(props, "attribute");
 </script>
 <style lang=""></style>
-~~/classes/Attributes

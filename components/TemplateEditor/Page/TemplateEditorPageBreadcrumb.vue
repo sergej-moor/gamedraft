@@ -16,7 +16,6 @@
   </div>
 </template>
 <script setup>
-import Template from "~~/classes/Template";
 import { useTemplateStore } from "~~/stores/template";
 const templateStore = useTemplateStore();
 

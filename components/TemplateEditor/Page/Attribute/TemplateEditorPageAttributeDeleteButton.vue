@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/require-explicit-emits -->
 <template lang="">
   <button
     class="btn delete-btn max-w-xs ml-2 p-1"
@@ -19,7 +20,5 @@
     </svg>
   </button>
 </template>
-<script>
-export default {};
-</script>
+<script setup></script>
 <style lang="scss"></style>

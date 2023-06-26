@@ -98,7 +98,7 @@
   </div>
 </template>
 <script setup>
-import { Attribute, Numberfield, Textfield } from "~~/classes/Attributes";
+import { Numberfield, Textfield } from "~~/classes/Attributes";
 
 import { useTemplateStore } from "@/stores/template";
 
@@ -106,12 +106,12 @@ const templateStore = useTemplateStore();
 const { addAttribute, addTemplate, deleteCurrentTemplate } = templateStore;
 
 function addTextFieldAttribute() {
-  let att = new Textfield("Surname", "Cornelius");
+  const att = new Textfield("Surname", "Cornelius");
   addAttribute(att);
 }
 
 function addNumberFieldAttribute() {
-  let att = new Numberfield("ExmapleTest", 0);
+  const att = new Numberfield("ExmapleTest", 0);
   addAttribute(att);
 }
 

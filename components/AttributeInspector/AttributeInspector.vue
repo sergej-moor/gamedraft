@@ -11,10 +11,10 @@
       </label>
       <input
         :value="name"
-        @input="(event) => updateAttributeName(event.target.value)"
         type="text"
         placeholder="name"
         class="w-full rounded-sm bg-gray-200 p-1 text-sm"
+        @input="(event) => updateAttributeName(event.target.value)"
       />
     </div>
 
@@ -32,17 +32,24 @@
 
     <!-- Default Value -->
 
-    <TemplateInspectorNumber v-if="type == 'number'"></TemplateInspectorNumber>
+    <AttributeInspectorNumber
+      v-if="type === 'number'"
+    ></AttributeInspectorNumber>
+
+    <AttributeInspectorText v-if="type === 'text'"></AttributeInspectorText>
   </div>
 </template>
 <script setup>
 import { useTemplateStore } from "@/stores/template";
 
 const props = defineProps({
-  name: String,
-  type: String,
-  id: Number,
+  name: { type: String, default: "" },
+  type: { type: String, default: "" },
+  id: { type: Number, default: -1 },
 });
+const name = toRef(props, "name");
+const type = toRef(props, "type");
+const id = toRef(props, "id");
 
 const { updateSelectedAttributeName } = useTemplateStore();
 

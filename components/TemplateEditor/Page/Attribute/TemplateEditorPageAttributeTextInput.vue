@@ -22,7 +22,7 @@
 </template>
 <script setup>
 const props = defineProps({
-  title: String,
+  title: { type: String, default: "" },
 });
 const title = toRef(props, "title");
 </script>

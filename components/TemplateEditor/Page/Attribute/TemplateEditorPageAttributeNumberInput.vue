@@ -21,11 +21,8 @@
   </div>
 </template>
 <script setup>
-import { useTemplateStore } from "@/stores/template";
-const templateStore = useTemplateStore();
-
 const props = defineProps({
-  title: String,
+  title: { type: String, default: "" },
 });
 
 const title = toRef(props, "title");

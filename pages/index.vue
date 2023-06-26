@@ -1,34 +1,34 @@
 <template lang="">
   <div class="page w-full min-h-full gap-2">
-    <TemplateTreeMenuTree class="menu__tree p-2"></TemplateTreeMenuTree>
+    <TemplateTree class="menu__tree p-2"></TemplateTree>
 
     <div
-      class="preview h-full flex flex-col"
       v-if="!useTemplateStore().showContentEditor"
+      class="preview h-full flex flex-col"
     >
-      <TemplateTabs class="tabs"></TemplateTabs>
-      <TemplateToolbar class="toolbar"></TemplateToolbar>
-      <TemplatePage></TemplatePage>
+      <TemplateEditorTabbar class="tabs"></TemplateEditorTabbar>
+      <TemplateEditorToolbar class="toolbar"></TemplateEditorToolbar>
+      <TemplateEditorPage></TemplateEditorPage>
     </div>
-    <div class="preview" v-else>
+    <div v-else class="preview">
       Content Editor stuff
       <Entry />
     </div>
 
-    <TemplateAttributeInspector
-      :name="templateStore.selectedAttribute.name"
+    <AttributeInspector
+      v-if="!useTemplateStore().showContentEditor"
       :id="templateStore.selectedAttribute.id"
+      :name="templateStore.selectedAttribute.name"
       :type="templateStore.selectedAttribute.type"
       class="attribute__inspector"
-    ></TemplateAttributeInspector>
+    ></AttributeInspector>
   </div>
 </template>
 <script setup>
 import { useTemplateStore } from "@/stores/template";
-import { Textfield, Numberfield } from "../classes/Attributes";
 
 const templateStore = ref(useTemplateStore());
-//const selectedAttribute = ref(useTemplateStore().);
+// const selectedAttribute = ref(useTemplateStore().);
 </script>
 <style lang="scss" scoped>
 .page {

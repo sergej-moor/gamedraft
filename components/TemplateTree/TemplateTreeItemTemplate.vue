@@ -37,31 +37,21 @@
       </div>
     </a>
 
-    <!-- Render template attributes -->
-    <!-- 		<TemplateMenuItemAttribute
-			v-if="showChildren"
-			v-for="att in attributes"
-			:name="att.name"
-			:type="att.type"
-			:depth="depth"
-			:id="att.id"
-		></TemplateMenuItemAttribute> -->
-
     <!-- Render Content Pages -->
     <div v-if="showChildren">
-      <TemplateTreeMenuItemEntry
+      <TemplateTreeItemEntry
         v-for="(content, index) in entries"
         :id="content.id"
         :key="index"
         :name="content.name"
         :depth="depth"
       >
-      </TemplateTreeMenuItemEntry>
+      </TemplateTreeItemEntry>
     </div>
 
     <!-- Render child templates -->
     <div v-if="showChildren">
-      <TemplateTreeMenuItemTemplate
+      <TemplateTreeItemTemplate
         v-for="(node, index) in children"
         :key="index"
         :children="node.children"
@@ -156,32 +146,6 @@ function optionClicked(event) {
     deleteDialog.value = true;
   }
 }
-/* 	function childrenExist() {
-		if (children.value != undefined) {
-			console.log(children.value);
-			return children.value.length > 1;
-		}
-		return false;
-	}
- */
-/* else {
-		childrenExist.value = false;
-	} */
-
-/* const attributesAsText = ref("nothing");
-	const attributesAsObj = ref([]);
-	if (attributes.value != undefined) {
-		let text = "";
-		attributes.value.forEach((att) => {
-			text += att.name + "\n";
-		});
-		attributesAsText.value = text;
-	} */
-/* 	const indent = computed({
-		get() {
-			return { transform: `translate(${depth.value * 50}px)` };
-		},
-	}); */
 
 const depth = toRef(props, "depth");
 const ind = ref({ marginLeft: `${depth.value * 20}px` });

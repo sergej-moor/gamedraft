@@ -8,15 +8,15 @@
   >
     <!-- single line TEXTFIELD  -->
     <div class="flex">
-      <TemplateAttributeTextInput
+      <TemplateEditorPageAttributeTextInput
         v-if="attribute.type == 'text'"
         :title="attribute.name"
-        @updateTitle="updateAttributeTitle"
+        @update-title="updateAttributeTitle"
       />
-      <TemplateAttributeNumberInput
+      <TemplateEditorPageAttributeNumberInput
         v-else-if="attribute.type == 'number'"
         :title="attribute.name"
-        @updateTitle="updateAttributeTitle"
+        @update-title="updateAttributeTitle"
       />
       <!-- <div v-if="attribute.type == 'text'" class="flex-1 w-full">
 				<span class="w-full flex">
@@ -39,11 +39,11 @@
 			</div> -->
 
       <div v-else>Unknown Attribute Type called {{ attribute.type }}</div>
-      <TemplateAttributeDeleteButton
+      <TemplateEditorPageAttributeDeleteButton
         class="justify-self-end"
-        @deleteAttribute="handleDelete()"
+        @delete-attribute="handleDelete()"
       >
-      </TemplateAttributeDeleteButton>
+      </TemplateEditorPageAttributeDeleteButton>
     </div>
   </div>
 </template>
@@ -76,7 +76,7 @@ function setAttributeId() {
 }
 
 function isSelectedAttribute() {
-  return templateStore.selectedAttributeId == id.value;
+  return templateStore.selectedAttributeId === id.value;
 }
 </script>
 ~~/classes/Attributes

@@ -1,9 +1,11 @@
 <template lang="">
   <div class="bg-gray-600 p-2 mt-2 rounded h-full overflow-y-scroll">
     <button @click="testoutput">hey</button>
-    <TemplateBreadcrumb :templateList="templateStore.getParentsOfCurrent" />
+    <TemplateEditorPageBreadcrumb
+      :templateList="templateStore.getParentsOfCurrent"
+    />
     <div class="w-full text-3xl font-semibold">Templates</div>
-    <TemplatePreview
+    <TemplateEditorPageSection
       v-for="(template, index) in templateStore.getParentsOfCurrent"
       :key="index"
       :attributes="template.attributes"

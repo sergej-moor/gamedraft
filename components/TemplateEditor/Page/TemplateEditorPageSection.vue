@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="rounded px-2 my-2"
-    :class="{
-      'bg-gray-600': !activated,
-    }"
-  >
+  <div>
     <UtilityDivider @toggle-visibility="toggleVisibility">
       <input
         type="text"

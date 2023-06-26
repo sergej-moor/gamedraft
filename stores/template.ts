@@ -56,6 +56,10 @@ export const useTemplateStore = defineStore("template", {
       return getParentsOfTemplate(state.root);
     },
 
+    /* TODO: getBreadcrumbsOfCurrent
+    returns an array similar to getParentsOfCurrent, but also with 
+    the currentTemplate and the objects only contain the id and name properties */
+
     /**
      * Finds the corresponding object for the currently selected template in the template tree
      * @returns object of currently selected template

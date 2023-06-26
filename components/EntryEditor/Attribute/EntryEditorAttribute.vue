@@ -1,12 +1,12 @@
 <template lang="">
   <div class="form-control flex my-1">
     <div class="flex">
-      <EntryAttributeNumberInput
+      <EntryEditorAttributeNumberInput
         v-if="attribute.type == 'number'"
         :title="attribute.name"
         :input-val="attribute.value"
       />
-      <EntryAttributeTextInput
+      <EntryEditorAttributeTextInput
         v-if="attribute.type == 'text'"
         :title="attribute.name"
         :input-val="attribute.value"

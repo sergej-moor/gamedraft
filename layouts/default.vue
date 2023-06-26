@@ -2,9 +2,9 @@
   <div
     class="flex flex-col defaultlayout h-screen max-h-screen overflow-scroll text-xs bg-gray-800 text-white"
   >
-    <UtilityNavbar></UtilityNavbar>
+    <UtilityNavBar></UtilityNavBar>
     <div class="page-wrapper h-full flex">
-      <UtilitySidebar></UtilitySidebar>
+      <UtilitySideBar></UtilitySideBar>
       <slot class="page"> </slot>
     </div>
   </div>

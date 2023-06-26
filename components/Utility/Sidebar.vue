@@ -16,7 +16,7 @@
         />
       </svg>
     </UtilitySidebarButton>
-    <UtilitySidebarButton @pressButton="showContentEditor()"
+    <UtilitySidebarButton
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -75,10 +75,8 @@ import { useTemplateStore } from "~~/stores/template";
 const templateStore = useTemplateStore();
 
 function logToConsole() {
-  //LOG YOUR STUFF HERE
+  // LOG YOUR STUFF HERE
 }
-
-function firstAction() {}
 
 function exportTemplate() {
   download(
@@ -86,14 +84,6 @@ function exportTemplate() {
     "templatetree.txt",
     "text/plain"
   );
-}
-
-async function showTemplateEditor() {
-  await navigateTo("/");
-}
-
-async function showContentEditor() {
-  await navigateTo("/content");
 }
 
 function importTemplate() {

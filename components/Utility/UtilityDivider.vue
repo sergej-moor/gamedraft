@@ -12,7 +12,7 @@
 </template>
 <script setup>
 const emit = defineEmits(["toggleVisibility"]);
-let visible = ref(true);
+const visible = ref(true);
 function toggleVisibility() {
   visible.value = !visible.value;
   emit("toggleVisibility", visible.value);

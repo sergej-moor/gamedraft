@@ -36,7 +36,7 @@ function setAttributeId() {
 }
 
 function isSelectedAttribute() {
-  return templateStore.selectedAttributeId == props.id;
+  return templateStore.selectedAttributeId === props.id;
 } /* 
 	let isSelectedAttribute = ref(templateStore.selectedAttributeId == props.id); */
 </script>

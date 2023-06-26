@@ -26,7 +26,7 @@ const props = defineProps({
 });
 
 const name = toRef(props, "name");
-const type = toRef(props, "type");
+/* const type = toRef(props, "type"); */
 const depth = toRef(props, "depth");
 const ind = ref({ transform: `translate(${depth.value * 20 + 35}px)` });
 
@@ -35,7 +35,7 @@ function setEntryId() {
 }
 
 function isSelectedEntry() {
-  return templateStore.selectedEntryId == props.id;
+  return templateStore.selectedEntryId === props.id;
 } /* 
 	let isSelectedAttribute = ref(templateStore.selectedAttributeId == props.id); */
 </script>

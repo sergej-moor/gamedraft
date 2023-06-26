@@ -42,5 +42,6 @@
 const props = defineProps({
   visible: Boolean,
 });
+const visible = toRef(props, "visible");
 </script>
 <style lang=""></style>

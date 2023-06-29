@@ -7,9 +7,9 @@ export default class Template {
   // eslint-disable-next-line no-use-before-define
   children: Template[];
   entries: Entry[];
-  id: Number;
+  id: number;
 
-  constructor(name: string, id: Number) {
+  constructor(name: string, id: number) {
     this.name = name;
     this.attributes = [];
     this.children = [];

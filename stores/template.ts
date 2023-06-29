@@ -3,21 +3,37 @@ import Template from "../classes/Template";
 import { Attribute } from "~~/classes/Attributes";
 import Entry from "~~/classes/Entry";
 
+// import Breadcrumb from "~~/classes/Breadcrumb";
+
+interface State {
+  lastEntryId: number;
+  lastTemplateId: number;
+  lastAttributeId: number;
+  selectedEntryId: number;
+  selectedTemplateId: number;
+  selectedAttributeId: number;
+  selectedTabId: number;
+  tabs: { id: number; templateId: number; attributeId: number }[];
+  showContentEditor: boolean;
+  currentTemplateCache: Template | null;
+  root: Template;
+}
+
 export const useTemplateStore = defineStore("template", {
   persist: {
     storage: persistedState.localStorage,
   },
-  state: () => ({
+  state: (): State => ({
     lastEntryId: 1,
     lastTemplateId: 1,
     lastAttributeId: 1,
     selectedEntryId: 1,
     selectedTemplateId: 1,
     selectedAttributeId: -1,
-    currentTabId: 0,
+    selectedTabId: 0,
     tabs: [{ id: 0, templateId: 0, attributeId: 0 }],
     showContentEditor: false,
-
+    currentTemplateCache: null,
     root: new Template("rootTemplate", 1),
   }),
   getters: {
@@ -56,6 +72,29 @@ export const useTemplateStore = defineStore("template", {
       return getParentsOfTemplate(state.root);
     },
 
+    getParentsOfTemplateById:
+      (state) =>
+      (targetId: number): Template[] | null => {
+        const getParentsOfTemplate = function (
+          current: Template
+        ): Template[] | null {
+          if (current.id === targetId || !current.children.length) return null;
+
+          if (current.children.find((child) => child.id === targetId))
+            return [current];
+
+          for (let i = 0; i < current.children.length; i++) {
+            const branchesToChild = getParentsOfTemplate(current.children[i]);
+
+            if (branchesToChild) return [current, ...branchesToChild];
+          }
+
+          return null;
+        };
+
+        return getParentsOfTemplate(state.root);
+      },
+
     /* TODO: getBreadcrumbsOfCurrent
     returns an array similar to getParentsOfCurrent, but also with 
     the currentTemplate and the objects only contain the id and name properties */
@@ -66,9 +105,11 @@ export const useTemplateStore = defineStore("template", {
      */
     currentTemplate: (state): Template | null => {
       const findCurrentTemplate = function (): Template | null {
+        if (state.currentTemplateCache?.id === state.selectedTemplateId)
+          return state.currentTemplateCache;
+
         const stack: Template[] = [];
         stack.push(state.root);
-
         while (stack.length > 0) {
           const current = stack.pop();
 
@@ -117,72 +158,116 @@ export const useTemplateStore = defineStore("template", {
       this.lastEntryId += 1;
       entry.setId(this.lastEntryId);
       entry.name = "entry" + this.lastEntryId.toString();
+      entry.attributes.push(
+        ...(this.getParentsOfCurrent?.flatMap((parent) => parent.attributes) ??
+          [])
+      );
+      entry.attributes.push(...(this.currentTemplate?.attributes ?? []));
       this.currentTemplate!.entries.push(entry);
 
       // TODO add the attributes from the current template to this contentpage
       // if a default value is set, set it to the inital "value"-prop from the attribute-object
     },
 
+    /**
+     * Deletes the currently selected template from the template tree
+     * Automatically selects the next sibling
+     * @param adoptGrandChildren Whether the direct parent of current should become the new direct parent of currents' children. If false, all children will be deleted too
+     * @param inheritAttributes Whether unique attributes of current should be inherited to all children before deletion as to not get lost. If false, attributes (and their values) will be lost
+     * @returns whether opperation was successfull
+     */
     deleteCurrentTemplate(
-      deleteChildren?: boolean,
-      mergeAttributesDown?: boolean
+      adoptGrandChildren?: boolean,
+      inheritAttributes?: boolean
     ): boolean {
       const parents = this.getParentsOfCurrent;
 
       if (parents) {
+        const directParent = parents[parents.length - 1];
+
+        const childIndex = directParent.children.findIndex(
+          (child) => child === this.currentTemplate
+        );
+
+        const newSelectedId =
+          directParent.children.length > 1
+            ? directParent.children[childIndex + (childIndex > 0 ? -1 : 1)].id
+            : directParent.id;
+
         const siblings: Template[] = parents[
           parents.length - 1
-        ].children.filter((child) => child !== this.currentTemplate);
-        const children = this.currentTemplate?.children ?? [];
+        ].children.filter((sibling) => sibling !== this.currentTemplate);
+        const grandChildren = this.currentTemplate?.children ?? [];
 
-        if (mergeAttributesDown) {
-          children.forEach((child) => {
+        if (inheritAttributes) {
+          grandChildren.forEach((child) => {
             child.attributes.push(...(this.currentTemplate?.attributes ?? []));
           });
         }
 
-        const newChildren = [...siblings, ...children];
-        parents[parents.length - 1].children = deleteChildren
-          ? siblings
-          : newChildren;
+        directParent.children = adoptGrandChildren
+          ? [...siblings, ...grandChildren]
+          : siblings;
 
-        this.selectedTemplateId = parents[parents?.length - 1].id.valueOf();
+        this.selectedTemplateId = newSelectedId;
         return true;
       } else {
+        // TODO Add Pop-up for confirmation
         console.error("Cannot delete root template.");
         return false;
       }
     },
 
-    /* deleteTemplateById(id : Number): boolean {
-        const stack : Template[] = [];
-        stack.push(this.root);
+    /**
+     * Deletes a template from the template tree by its id
+     * @param targetId Id of the template to be deleted
+     * @param adoptGrandChildren Whether the direct parent of current should become the new direct parent of currents' children. If false, all children will be deleted too
+     * @param inheritAttributes Whether unique attributes of current should be inherited to all children before deletion as to not get lost. If false, attributes (and their values) will be lost
+     * @returns whether opperation was successfull
+     */
+    deleteTemplateById(
+      targetId: number,
+      adoptGrandChildren?: boolean,
+      mergeAttributesDown?: boolean
+    ): boolean {
+      const stack: Template[] = [];
+      stack.push(this.root);
 
-        while (stack.length > 0) {
-            const current = stack.pop();
-            //console.log(current);
+      while (stack.length > 0) {
+        const current = stack.pop();
 
-            if (current?.id == id) {
-                let parents = this.getParentsOfCurrent;
+        if (current?.id === targetId) {
+          const parents = this.getParentsOfTemplateById(targetId);
 
-                if (parents) {
-                    let siblings: Template[] = parents[parents.length - 1].children.filter(child => child !== current);
-                    parents[parents.length - 1].children = [...siblings, ...current.children];
-                    this.currentTemplateId = parents[parents.length - 1].id.valueOf();
-                    return true;
-                } else {
-                    console.error("Cannot delete root template.");
-                    return false;
-                }
+          if (parents) {
+            const siblings: Template[] = parents[
+              parents.length - 1
+            ].children.filter((child) => child !== current);
+
+            const grandChildren = current.children ?? [];
+
+            if (mergeAttributesDown) {
+              grandChildren.forEach((child) => {
+                child.attributes.push(...(current.attributes ?? []));
+              });
             }
 
-            if (current?.children.length) 
-                stack.push(...current.children);
-        }
+            parents[parents.length - 1].children = adoptGrandChildren
+              ? [...siblings, ...grandChildren]
+              : siblings;
 
-        console.error(`Couldn't find template with id: ${Number}!`);
-        return false;
-    }, */
+            return true;
+          } else {
+            console.error("Cannot delete root template.");
+            return false;
+          }
+        }
+        if (current?.children.length) stack.push(...current.children);
+      }
+
+      console.error(`Couldn't find template with id: ${targetId}!`);
+      return false;
+    },
 
     setselectedEntryId(id: number) {
       this.selectedEntryId = id;
@@ -212,7 +297,7 @@ export const useTemplateStore = defineStore("template", {
       this.currentTemplate!.attributes.push(attribute);
     },
 
-    deleteAttribute(attributeId: Number) {
+    deleteAttribute(attributeId: number) {
       let attributeIndex = -1;
       this.currentTemplate!.attributes.forEach((att, index) => {
         if (att.id === attributeId) {
@@ -223,7 +308,7 @@ export const useTemplateStore = defineStore("template", {
       this.currentTemplate!.attributes.splice(attributeIndex, 1);
     },
 
-    updateAttributeName(attributeId: Number, newName: String) {
+    updateAttributeName(attributeId: number, newName: String) {
       this.currentTemplate!.attributes.forEach((att, _index) => {
         if (att.id === attributeId) {
           att.name = newName;

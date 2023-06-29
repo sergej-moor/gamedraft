@@ -2,7 +2,7 @@ import { Attribute } from "./Attributes";
 
 export default class Entry {
   name: String;
-  id: Number;
+  id: number;
   attributes: Attribute[];
 
   constructor(name: string) {
@@ -11,7 +11,7 @@ export default class Entry {
     this.attributes = [];
   }
 
-  setId(id: Number) {
+  setId(id: number) {
     this.id = id;
   }
 }

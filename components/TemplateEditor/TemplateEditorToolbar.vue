@@ -120,6 +120,6 @@ function addChild() {
 }
 
 function deleteTemplate() {
-  deleteCurrentTemplate();
+  deleteCurrentTemplate(true);
 }
 </script>

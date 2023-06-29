@@ -1,5 +1,5 @@
 class Attribute {
-  id: Number;
+  id: number;
   name: String;
   value: any;
   type: String;
@@ -10,7 +10,7 @@ class Attribute {
     this.type = "base";
   }
 
-  setId(id: Number) {
+  setId(id: number) {
     this.id = id;
   }
 }
@@ -23,7 +23,7 @@ class Textfield extends Attribute {
   }
 }
 class Numberfield extends Attribute {
-  constructor(name: string, value: Number) {
+  constructor(name: string, value: number) {
     super(name);
     this.value = value;
     this.type = "number";

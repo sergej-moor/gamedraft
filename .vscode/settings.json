@@ -1,4 +1,5 @@
 {
-  "vue3snippets.enable-compile-vue-file-on-did-save-code": false,
-  "eslint.format.enable": true
+    "vue3snippets.enable-compile-vue-file-on-did-save-code": false,
+    "eslint.format.enable": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
 }

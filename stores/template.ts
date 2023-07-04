@@ -48,11 +48,21 @@ export const useTemplateStore = defineStore("template", {
      * @returns object of currently selected template
      */
     currentTemplate: (state): Template | null => {
-      const findCurrentTemplate = function (): Template | null {
+      return useTemplateStore().getTemplateById(state.selectedTemplateId);
+    },
+
+    /**
+     * Returns the corresponding object for a template specified by an id
+     * @param targetId id of the template to be returned
+     * @returns template with specified id if found, null if not
+     */
+    getTemplateById:
+      (state) =>
+      (targetId: number): Template | null => {
         if (
           state.selectedElementCache &&
           state.selectedElementCache instanceof Template &&
-          state.selectedElementCache.id === state.selectedTemplateId
+          state.selectedElementCache.id === targetId
         )
           return state.selectedElementCache;
 
@@ -61,19 +71,14 @@ export const useTemplateStore = defineStore("template", {
         while (stack.length > 0) {
           const current = stack.pop();
 
-          if (current?.id === state.selectedTemplateId) return current;
+          if (current?.id === targetId) return current;
 
           if (current?.children.length) stack.push(...current.children);
         }
 
-        console.error(
-          `Couldn't find template with id: ${state.selectedTemplateId}!`
-        );
+        console.error(`Couldn't find template with id: ${targetId}!`);
         return null;
-      };
-
-      return findCurrentTemplate();
-    },
+      },
 
     /**
      * Recursively determines all parent templates of the currently selected template
@@ -154,7 +159,7 @@ export const useTemplateStore = defineStore("template", {
     },
   },
   actions: {
-    /* --- ENTRY SECTION --- */
+    /* --------------- ENTRY SECTION --------------- */
 
     /**
      * Adds an entry to the current template if it has no children
@@ -162,12 +167,16 @@ export const useTemplateStore = defineStore("template", {
      * @returns whether the current operation was successfull
      */
     addEntry(entry: Entry): boolean {
-      // @todo - Add Pop-up for whether the entry should be added to the next child
+      // @todo - Add Pop-up for whether the entry should be added to the oldest child
       if (
         this.currentTemplate?.children &&
         this.currentTemplate.children.length
-      )
+      ) {
+        console.error(
+          `Selected Template has children! Add to children instead!`
+        );
         return false;
+      }
 
       this.lastEntryId += 1;
       entry.setId(this.lastEntryId);
@@ -181,7 +190,7 @@ export const useTemplateStore = defineStore("template", {
       return true;
     },
 
-    setselectedEntryId(id: number) {
+    setSelectedEntryId(id: number) {
       this.selectedEntryId = id;
       // console.log("set selectedEntry ID to " + this.selectedEntryId);
 
@@ -193,10 +202,33 @@ export const useTemplateStore = defineStore("template", {
       this.selectedEntry.attributes = this.currentTemplate!.attributes;
     },
 
+    /**
+     * Deletes an Entry with the specified id from the template tree and returns it
+     * @param targetId Id of the Entry to be deleted
+     * @returns deleted Entry if found, otherwise undefined
+     */
+    deleteEntryById(targetId: number): Entry | undefined {
+      const stack: Template[] = [];
+      stack.push(this.root);
+
+      while (stack.length > 0) {
+        const current = stack.pop();
+
+        const targetIndex =
+          current?.entries.findIndex((entry) => entry.id === targetId) ?? -1;
+        if (targetIndex >= 0) return current?.entries.splice(targetIndex, 1)[0];
+
+        if (current?.children.length) stack.push(...current.children);
+      }
+
+      console.error(`Couldn't find Entry with id: ${targetId}!`);
+      return undefined;
+    },
+
     // @todo - add functions that update the attribute-objects "value"-prop in the current entry
     // wichtig: number-attribute haben einen min und max-wert, auf den geclampt werden muss wenn der gesetzt ist
 
-    /* --- ATTRIBUTE SECTION --- */
+    /* --------------- ATTRIBUTE SECTION --------------- */
 
     setSelectedAttributeId(id: number) {
       this.selectedAttributeId = id;
@@ -237,8 +269,11 @@ export const useTemplateStore = defineStore("template", {
       });
     },
 
-    /* --- TEMPLATE SECTION --- */
+    /* --------------- TEMPLATE SECTION --------------- */
 
+    /**
+     * Adds a template as child to the currently selected template
+     */
     addTemplate() {
       this.lastTemplateId += 1;
       const newChild = new Template(

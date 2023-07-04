@@ -31,7 +31,7 @@ const depth = toRef(props, "depth");
 const ind = ref({ transform: `translate(${depth.value * 20 + 35}px)` });
 
 function setEntryId() {
-  templateStore.setselectedEntryId(props.id);
+  templateStore.setSelectedEntryId(props.id);
 }
 
 function isSelectedEntry() {

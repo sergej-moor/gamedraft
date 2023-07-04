@@ -1,7 +1,7 @@
 <template lang="">
   <div class="bg-gray-600 p-2 pl-4 mt-2 rounded h-full overflow-y-scroll">
     <TemplateEditorPageBreadcrumb
-      :template-list="templateStore.getParentsOfCurrent"
+      :template-list="templateStore.getBreadcrumbsOfCurrent"
     />
 
     <div class="w-full text-3xl font-semibold mb-4">

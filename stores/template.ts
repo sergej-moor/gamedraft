@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import Template from "../classes/Template";
 import { Attribute } from "~~/classes/Attributes";
 import Entry from "~~/classes/Entry";
+import Breadcrumb from "~~/classes/Breadcrumb";
 
 // import Breadcrumb from "~~/classes/Breadcrumb";
 
@@ -15,7 +16,7 @@ interface State {
   selectedTabId: number;
   tabs: { id: number; templateId: number; attributeId: number }[];
   showContentEditor: boolean;
-  currentTemplateCache: Template | null;
+  selectedElementCache: Template | Entry | null;
   root: Template;
 }
 
@@ -33,12 +34,45 @@ export const useTemplateStore = defineStore("template", {
     selectedTabId: 0,
     tabs: [{ id: 0, templateId: 0, attributeId: 0 }],
     showContentEditor: false,
-    currentTemplateCache: null,
+    selectedElementCache: null,
     root: new Template("rootTemplate", 1),
   }),
+
   getters: {
     rootTemplate: (state): Template => {
       return state.root;
+    },
+
+    /**
+     * Finds the corresponding object for the currently selected template in the template tree
+     * @returns object of currently selected template
+     */
+    currentTemplate: (state): Template | null => {
+      const findCurrentTemplate = function (): Template | null {
+        if (
+          state.selectedElementCache &&
+          state.selectedElementCache instanceof Template &&
+          state.selectedElementCache.id === state.selectedTemplateId
+        )
+          return state.selectedElementCache;
+
+        const stack: Template[] = [];
+        stack.push(state.root);
+        while (stack.length > 0) {
+          const current = stack.pop();
+
+          if (current?.id === state.selectedTemplateId) return current;
+
+          if (current?.children.length) stack.push(...current.children);
+        }
+
+        console.error(
+          `Couldn't find template with id: ${state.selectedTemplateId}!`
+        );
+        return null;
+      };
+
+      return findCurrentTemplate();
     },
 
     /**
@@ -47,31 +81,17 @@ export const useTemplateStore = defineStore("template", {
      * @returns parents of current template in ordered array starting with root
      */
     getParentsOfCurrent: (state): Template[] | null => {
-      const getParentsOfTemplate = function (
-        current: Template
-      ): Template[] | null {
-        if (current.id === state.selectedTemplateId || !current.children.length)
-          return null;
-
-        if (
-          current.children.find(
-            (child) => child.id === state.selectedTemplateId
-          )
-        )
-          return [current];
-
-        for (let i = 0; i < current.children.length; i++) {
-          const branchesToChild = getParentsOfTemplate(current.children[i]);
-
-          if (branchesToChild) return [current, ...branchesToChild];
-        }
-
-        return null;
-      };
-
-      return getParentsOfTemplate(state.root);
+      return useTemplateStore().getParentsOfTemplateById(
+        state.selectedTemplateId
+      );
     },
 
+    /**
+     * Recursively determines all parent templates of a specific template by its id
+     * Does not contain the template itself as that would be redundant
+     * @param targetId Id of the template which parents should be returned
+     * @returns parents of a template in ordered array starting with root
+     */
     getParentsOfTemplateById:
       (state) =>
       (targetId: number): Template[] | null => {
@@ -95,36 +115,18 @@ export const useTemplateStore = defineStore("template", {
         return getParentsOfTemplate(state.root);
       },
 
-    /* TODO: getBreadcrumbsOfCurrent
-    returns an array similar to getParentsOfCurrent, but also with 
-    the currentTemplate and the objects only contain the id and name properties */
-
     /**
-     * Finds the corresponding object for the currently selected template in the template tree
-     * @returns object of currently selected template
+     * Returns the parents starting at root and the current template as an array of breadcrumb
+     * objects which only contain the name and id of the templates
+     * @returns array of simple breadcrum objects containing name and Id
      */
-    currentTemplate: (state): Template | null => {
-      const findCurrentTemplate = function (): Template | null {
-        if (state.currentTemplateCache?.id === state.selectedTemplateId)
-          return state.currentTemplateCache;
-
-        const stack: Template[] = [];
-        stack.push(state.root);
-        while (stack.length > 0) {
-          const current = stack.pop();
-
-          if (current?.id === state.selectedTemplateId) return current;
-
-          if (current?.children.length) stack.push(...current.children);
-        }
-
-        console.error(
-          `Couldn't find template with id: ${state.selectedTemplateId}!`
-        );
-        return null;
-      };
-
-      return findCurrentTemplate();
+    getBreadcrumbsOfCurrent: (): Breadcrumb[] | undefined => {
+      const store = useTemplateStore();
+      const current = store.currentTemplate;
+      const parents = store.getParentsOfCurrent;
+      return (parents || [])
+        .concat(current ? [current] : [])
+        .map((template) => new Breadcrumb(template.id, template.name));
     },
 
     /**
@@ -152,9 +154,21 @@ export const useTemplateStore = defineStore("template", {
     },
   },
   actions: {
-    /* CONTENT PAGES */
+    /* --- ENTRY SECTION --- */
 
-    addEntry(entry: Entry) {
+    /**
+     * Adds an entry to the current template if it has no children
+     * @param entry Entry to be added to the current template
+     * @returns whether the current operation was successfull
+     */
+    addEntry(entry: Entry): boolean {
+      // @todo - Add Pop-up for whether the entry should be added to the next child
+      if (
+        this.currentTemplate?.children &&
+        this.currentTemplate.children.length
+      )
+        return false;
+
       this.lastEntryId += 1;
       entry.setId(this.lastEntryId);
       entry.name = "entry" + this.lastEntryId.toString();
@@ -164,14 +178,80 @@ export const useTemplateStore = defineStore("template", {
       );
       entry.attributes.push(...(this.currentTemplate?.attributes ?? []));
       this.currentTemplate!.entries.push(entry);
+      return true;
+    },
 
-      // TODO add the attributes from the current template to this contentpage
-      // if a default value is set, set it to the inital "value"-prop from the attribute-object
+    setselectedEntryId(id: number) {
+      this.selectedEntryId = id;
+      // console.log("set selectedEntry ID to " + this.selectedEntryId);
+
+      this.showContentEditor = true;
+    },
+
+    updateEntryAttributes() {
+      // @todo - make sure that the content page has the same attributes as the template while remaining the filled in data
+      this.selectedEntry.attributes = this.currentTemplate!.attributes;
+    },
+
+    // @todo - add functions that update the attribute-objects "value"-prop in the current entry
+    // wichtig: number-attribute haben einen min und max-wert, auf den geclampt werden muss wenn der gesetzt ist
+
+    /* --- ATTRIBUTE SECTION --- */
+
+    setSelectedAttributeId(id: number) {
+      this.selectedAttributeId = id;
+    },
+
+    addAttribute(attribute: Attribute) {
+      this.lastAttributeId += 1;
+      attribute.setId(this.lastAttributeId);
+      attribute.name =
+        attribute.type + "Attribute" + this.lastAttributeId.toString();
+      this.currentTemplate!.attributes.push(attribute);
+    },
+
+    deleteAttribute(attributeId: number) {
+      let attributeIndex = -1;
+      this.currentTemplate!.attributes.forEach((att, index) => {
+        if (att.id === attributeId) {
+          attributeIndex = index;
+        }
+      });
+
+      this.currentTemplate!.attributes.splice(attributeIndex, 1);
+    },
+
+    updateAttributeName(attributeId: number, newName: String) {
+      this.currentTemplate!.attributes.forEach((att, _index) => {
+        if (att.id === attributeId) {
+          att.name = newName;
+        }
+      });
+    },
+
+    updateSelectedAttributeName(newName: String) {
+      this.currentTemplate!.attributes.forEach((att, _index) => {
+        if (att.id === this.selectedAttributeId) {
+          att.name = newName;
+        }
+      });
+    },
+
+    /* --- TEMPLATE SECTION --- */
+
+    addTemplate() {
+      this.lastTemplateId += 1;
+      const newChild = new Template(
+        "Template_" + this.lastTemplateId,
+        this.lastTemplateId
+      );
+      const current = this.currentTemplate;
+      newChild.entries = current!.entries.splice(0, current!.entries.length);
+      this.currentTemplate!.children.push(newChild);
     },
 
     /**
-     * Deletes the currently selected template from the template tree
-     * Automatically selects the next sibling
+     * Deletes the currently selected template from the template tree then automatically selects the next sibling
      * @param adoptGrandChildren Whether the direct parent of current should become the new direct parent of currents' children. If false, all children will be deleted too
      * @param inheritAttributes Whether unique attributes of current should be inherited to all children before deletion as to not get lost. If false, attributes (and their values) will be lost
      * @returns whether opperation was successfull
@@ -212,7 +292,7 @@ export const useTemplateStore = defineStore("template", {
         this.selectedTemplateId = newSelectedId;
         return true;
       } else {
-        // TODO Add Pop-up for confirmation
+        // @todo - Add Pop-up for deletion settings
         console.error("Cannot delete root template.");
         return false;
       }
@@ -267,71 +347,6 @@ export const useTemplateStore = defineStore("template", {
 
       console.error(`Couldn't find template with id: ${targetId}!`);
       return false;
-    },
-
-    setselectedEntryId(id: number) {
-      this.selectedEntryId = id;
-      // console.log("set selectedEntry ID to " + this.selectedEntryId);
-
-      this.showContentEditor = true;
-    },
-
-    updateEntryAttributes() {
-      // TODO make sure that the content page has the same attributes as the template while remaining the filled in data
-      this.selectedEntry.attributes = this.currentTemplate!.attributes;
-    },
-
-    // TODO add functions that update the attribute-objects "value"-prop in the current entry
-    // wichtig: number-attribute haben einen min und max-wert, auf den geclampt werden muss wenn der gesetzt ist
-
-    /* --- ATTRIBUTES --- */
-    setSelectedAttributeId(id: number) {
-      this.selectedAttributeId = id;
-    },
-
-    addAttribute(attribute: Attribute) {
-      this.lastAttributeId += 1;
-      attribute.setId(this.lastAttributeId);
-      attribute.name =
-        attribute.type + "Attribute" + this.lastAttributeId.toString();
-      this.currentTemplate!.attributes.push(attribute);
-    },
-
-    deleteAttribute(attributeId: number) {
-      let attributeIndex = -1;
-      this.currentTemplate!.attributes.forEach((att, index) => {
-        if (att.id === attributeId) {
-          attributeIndex = index;
-        }
-      });
-
-      this.currentTemplate!.attributes.splice(attributeIndex, 1);
-    },
-
-    updateAttributeName(attributeId: number, newName: String) {
-      this.currentTemplate!.attributes.forEach((att, _index) => {
-        if (att.id === attributeId) {
-          att.name = newName;
-        }
-      });
-    },
-
-    updateSelectedAttributeName(newName: String) {
-      this.currentTemplate!.attributes.forEach((att, _index) => {
-        if (att.id === this.selectedAttributeId) {
-          att.name = newName;
-        }
-      });
-    },
-
-    /* --- TEMPLATES --- */
-    addTemplate() {
-      this.lastTemplateId += 1;
-      const template = new Template(
-        "Template_" + this.lastTemplateId,
-        this.lastTemplateId
-      );
-      this.currentTemplate!.children.push(template);
     },
 
     setSelectedTemplateId(id: number) {

@@ -19,13 +19,10 @@
 </template>
 <script setup>
 import { useTemplateStore } from "~~/stores/template";
-import Entry from "~~/classes/Entry";
-const templateStore = useTemplateStore();
-const templateTree = ref(templateStore.rootTemplate);
+const store = useTemplateStore();
+const templateTree = ref(store.rootTemplate);
 
 function addEntry() {
-  const content = new Entry("hallo");
-  console.log("addContent Page");
-  templateStore.addEntry(content);
+  templateStore.addEntry();
 }
 </script>

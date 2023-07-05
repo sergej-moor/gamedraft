@@ -72,25 +72,39 @@
 <script setup>
 import download from "downloadjs";
 import { useTemplateStore } from "~~/stores/template";
-const templateStore = useTemplateStore();
-
-function logToConsole() {
-  // LOG YOUR STUFF HERE
-}
+const store = useTemplateStore();
 
 function exportTemplate() {
-  download(
-    JSON.stringify(templateStore.root),
-    "templatetree.txt",
-    "text/plain"
-  );
+  const templateJson = JSON.stringify(store.root);
+  const blob = new Blob([templateJson], { type: "application/json" });
+  download(blob, "templatetree.json");
 }
 
 function importTemplate() {
-  let newRootTemplate;
-  templateStore.root = newRootTemplate;
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "application/json";
+
+  input.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      try {
+        const json = reader.result?.toString();
+        if (json) store.parseJsonToTemplateTree(json);
+      } catch (error) {
+        console.error("Error parsing JSON file:", error);
+      }
+    };
+
+    reader.readAsText(file);
+  });
+
+  input.click();
 }
 </script>
+
 <style>
 .sidebar {
   min-height: 100%;

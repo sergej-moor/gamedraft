@@ -5,9 +5,9 @@ export default class Entry {
   id: number;
   attributes: Attribute[];
 
-  constructor(name: string) {
+  constructor(name: string, id: number) {
     this.name = name;
-    this.id = -1;
+    this.id = id;
     this.attributes = [];
   }
 

@@ -11,9 +11,9 @@ export default class Template {
 
   constructor(name: string, id: number) {
     this.name = name;
+    this.id = id;
     this.attributes = [];
     this.children = [];
     this.entries = [];
-    this.id = id;
   }
 }

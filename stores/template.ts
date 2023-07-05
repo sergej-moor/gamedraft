@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import Template from "../classes/Template";
-import { Attribute } from "~~/classes/Attributes";
+import { Attribute, Numberfield, Textfield } from "~~/classes/Attributes";
 import Entry from "~~/classes/Entry";
 import Breadcrumb from "~~/classes/Breadcrumb";
 
@@ -203,19 +203,19 @@ export const useTemplateStore = defineStore("template", {
     },
 
     /**
-     * @warning Seems like unintended behavior!
+     * @todo Seems like unintended behavior!
      * @returns currently selected Attribute and default attribute if null
      */
     selectedAttribute(state): Attribute {
       return (
         this.currentTemplate?.attributes.find(
           (att) => att.id === state.selectedAttributeId
-        ) ?? new Attribute("default")
+        ) ?? new Attribute("This seems like bad practice", -69)
       );
     },
 
     /**
-     * @warning Seems like unintended behavior!
+     * @todo Seems like unintended behavior!
      * @returns currently selected content page and default page if null
      */
     selectedEntry(state): Entry | undefined {
@@ -234,7 +234,7 @@ export const useTemplateStore = defineStore("template", {
      * @param entry Entry to be added to the current template
      * @returns whether the current operation was successfull
      */
-    addEntry(entry: Entry): boolean {
+    addEntry(): boolean {
       // @todo - Add Pop-up for whether the entry should be added to the oldest child
       if (
         this.currentTemplate?.children &&
@@ -246,15 +246,18 @@ export const useTemplateStore = defineStore("template", {
         return false;
       }
 
-      this.lastEntryId += 1;
-      entry.setId(this.lastEntryId);
-      entry.name = "entry" + this.lastEntryId.toString();
-      entry.attributes.push(
+      const newEntry = new Entry(
+        `newEntry (${this.lastEntryId + 1})`,
+        ++this.lastEntryId
+      );
+
+      newEntry.attributes.push(
         ...(this.getParentsOfCurrent?.flatMap((parent) => parent.attributes) ??
           [])
       );
-      entry.attributes.push(...(this.currentTemplate?.attributes ?? []));
-      this.currentTemplate!.entries.push(entry);
+
+      newEntry.attributes.push(...(this.currentTemplate?.attributes ?? []));
+      this.currentTemplate!.entries.push(newEntry);
       return true;
     },
 
@@ -298,7 +301,6 @@ export const useTemplateStore = defineStore("template", {
 
         if (compare) {
           attribute.name = compare.name;
-          attribute.type = compare.type;
           newEntryAttributes.push(attribute);
         }
       });
@@ -337,12 +339,17 @@ export const useTemplateStore = defineStore("template", {
       this.selectedAttributeId = id;
     },
 
-    addAttribute(attribute: Attribute) {
-      this.lastAttributeId += 1;
-      attribute.setId(this.lastAttributeId);
-      attribute.name =
-        attribute.type + "Attribute" + this.lastAttributeId.toString();
-      this.currentTemplate!.attributes.push(attribute);
+    addAttribute(
+      AttributeType: new (name: string, id: number, value?: any) => any,
+      name?: string,
+      value?: any
+    ) {
+      const newAttribute = new AttributeType(
+        name || `newAttribute (${this.lastAttributeId + 1})`,
+        ++this.lastAttributeId,
+        value
+      );
+      this.currentTemplate!.attributes.push(newAttribute);
     },
 
     deleteAttribute(attributeId: number) {
@@ -373,7 +380,7 @@ export const useTemplateStore = defineStore("template", {
     },
 
     setSelectedAttributeValue(value: any) {
-      this.selectedAttribute.value = value;
+      this.selectedAttribute!.value = value;
     },
 
     /* --------------- TEMPLATE SECTION --------------- */
@@ -395,17 +402,23 @@ export const useTemplateStore = defineStore("template", {
     /**
      * Deletes the currently selected template from the template tree then automatically selects the next sibling
      * @param adoptGrandChildren Whether the direct parent of current should become the new direct parent of currents' children. If false, all children will be deleted too
-     * @param inheritAttributes Whether unique attributes of current should be inherited to all children before deletion as to not get lost. If false, attributes (and their values) will be lost
+     * @param inheritAttributes Whether unique attributes of current should be inherited to all children before deletion. If false, attributes will be lost
+     * @param stepParent a sibling object that will adopt the deleted template's entries
      * @returns whether opperation was successfull
      */
     deleteCurrentTemplate(
       adoptGrandChildren?: boolean,
-      inheritAttributes?: boolean
+      inheritAttributes?: boolean,
+      stepParent?: Template
     ): boolean {
       const parents = this.getParentsOfCurrent;
 
+      // will not delete root
       if (parents) {
         const directParent = parents[parents.length - 1];
+
+        if (stepParent)
+          stepParent.entries.push(...this.currentTemplate!.entries);
 
         const childIndex = directParent.children.findIndex(
           (child) => child === this.currentTemplate
@@ -444,13 +457,15 @@ export const useTemplateStore = defineStore("template", {
      * Deletes a template from the template tree by its id
      * @param targetId Id of the template to be deleted
      * @param adoptGrandChildren Whether the direct parent of current should become the new direct parent of currents' children. If false, all children will be deleted too
-     * @param inheritAttributes Whether unique attributes of current should be inherited to all children before deletion as to not get lost. If false, attributes (and their values) will be lost
+     * @param inheritAttributes Whether unique attributes of current should be inherited to all children before deletion. If false, attributes will be lost
+     * @param stepParent a sibling object that will adopt the deleted template's entries
      * @returns whether opperation was successfull
      */
     deleteTemplateById(
       targetId: number,
       adoptGrandChildren?: boolean,
-      mergeAttributesDown?: boolean
+      mergeAttributesDown?: boolean,
+      stepParent?: Template
     ): boolean {
       const stack: Template[] = [];
       stack.push(this.root);
@@ -460,6 +475,9 @@ export const useTemplateStore = defineStore("template", {
 
         if (current?.id === targetId) {
           const parents = this.getParentsOfTemplateById(targetId);
+
+          if (stepParent)
+            stepParent.entries.push(...this.currentTemplate!.entries);
 
           if (parents) {
             const siblings: Template[] = parents[
@@ -489,6 +507,63 @@ export const useTemplateStore = defineStore("template", {
 
       console.error(`Couldn't find template with id: ${targetId}!`);
       return false;
+    },
+
+    /**
+     * Takes a json string, parses it to a template tree, then sets it as the current tree
+     * @param json String representing an object tree
+     */
+    parseJsonToTemplateTree(json: string) {
+      const deserializeAttributes = (data: any[]): Attribute[] => {
+        return data.map((parsedAttribute: any) => {
+          switch (parsedAttribute.type) {
+            case "number":
+              return new Numberfield(
+                parsedAttribute.name,
+                parsedAttribute.id,
+                parsedAttribute.value
+              );
+            case "text":
+              return new Textfield(
+                parsedAttribute.name,
+                parsedAttribute.id,
+                parsedAttribute.value
+              );
+            default:
+              return new Attribute(parsedAttribute.name, parsedAttribute.id);
+          }
+        });
+      };
+
+      const deserializeEntries = (data: any[]): Entry[] => {
+        return data.map((parsedEntry: any) => {
+          const entry = new Entry(parsedEntry.name, parsedEntry.id);
+          entry.setAttributes(deserializeAttributes(parsedEntry.attributes));
+          return entry;
+        });
+      };
+
+      const deserializeChildren = (data: any[]): Template[] => {
+        return data.map((parsedChild: any) => {
+          const child = new Template(parsedChild.name, parsedChild.id);
+          child.attributes = deserializeAttributes(parsedChild.attributes);
+          child.entries = deserializeEntries(parsedChild.entries);
+          child.children = deserializeChildren(parsedChild.children);
+          return child;
+        });
+      };
+
+      const deserializeTemplate = (data: any): Template => {
+        const template = new Template(data.name, data.id);
+        template.attributes = deserializeAttributes(data.attributes);
+        template.entries = deserializeEntries(data.entries);
+        template.children = deserializeChildren(data.children);
+        return template;
+      };
+
+      const data = JSON.parse(json);
+      this.root = deserializeTemplate(data);
+      console.log(this.root);
     },
 
     setSelectedTemplateId(id: number) {

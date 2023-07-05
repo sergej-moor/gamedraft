@@ -4,11 +4,10 @@ class Attribute {
   value?: any;
   type: string;
 
-  constructor(name: string, value?: any) {
-    this.id = -1;
+  constructor(name: string, id: number) {
+    this.id = id;
     this.name = name;
     this.type = "base";
-    this.value = value;
   }
 
   setId(id: number) {
@@ -17,15 +16,15 @@ class Attribute {
 }
 
 class Textfield extends Attribute {
-  constructor(name: string, value: string) {
-    super(name);
+  constructor(name: string, id: number, value?: string) {
+    super(name, id);
     this.value = value;
     this.type = "text";
   }
 }
 class Numberfield extends Attribute {
-  constructor(name: string, value: number) {
-    super(name);
+  constructor(name: string, id: number, value?: number) {
+    super(name, id);
     this.value = value;
     this.type = "number";
   }

@@ -1,10 +1,10 @@
 class Attribute {
   id: number;
-  name: String;
+  name: string;
   value?: any;
-  type: String;
+  type: string;
 
-  constructor(name: String, value?: any) {
+  constructor(name: string, value?: any) {
     this.id = -1;
     this.name = name;
     this.type = "base";
@@ -17,7 +17,7 @@ class Attribute {
 }
 
 class Textfield extends Attribute {
-  constructor(name: string, value: String) {
+  constructor(name: string, value: string) {
     super(name);
     this.value = value;
     this.type = "text";

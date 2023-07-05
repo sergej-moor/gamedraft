@@ -121,6 +121,74 @@ export const useTemplateStore = defineStore("template", {
       },
 
     /**
+     * @todo Implement matchAllTags
+     * Searches the template tree for templates with names or attribute names which include one of the search tags separated by space, comma or semicolon
+     * @param searchQuery The unmodified string containing the search tags
+     * @param includeEntryValues whether the values of entries should be searched too
+     * @param caseSensitiveSearch whether the search should be case sensitive
+     * @param matchAllTags whether a template or entry must match all specified search tags or only at least one
+     * @returns Templates and Entries containing the specified search tags
+     */
+    searchTemplates:
+      (state) =>
+      (
+        searchQuery: string,
+        includeEntryValues?: boolean,
+        caseSensitiveSearch?: boolean
+        // matchAllTags?: boolean
+      ): (Template | Entry)[] => {
+        const searchTags = searchQuery.split(/[\s,;]+/);
+        const results: (Template | Entry)[] = [];
+        const stack: Template[] = [];
+
+        stack.push(state.root);
+        while (stack.length > 0) {
+          const current = stack.pop();
+
+          if (
+            searchTags.find((tag) =>
+              caseSensitiveSearch
+                ? current!.name.includes(tag)
+                : current!.name.toLowerCase().includes(tag.toLowerCase())
+            )
+          )
+            results.push(current!);
+          else if (
+            current?.attributes.find((attribute) =>
+              searchTags.find((tag) =>
+                caseSensitiveSearch
+                  ? attribute.name.includes(tag)
+                  : attribute.name.toLowerCase().includes(tag.toLowerCase())
+              )
+            )
+          )
+            results.push(current);
+
+          if (includeEntryValues) {
+            const entries = current?.entries.find((entry) =>
+              entry.attributes.find((attribute) =>
+                searchTags.find((tag) =>
+                  attribute.value instanceof String
+                    ? caseSensitiveSearch
+                      ? attribute.value.includes(tag)
+                      : attribute.value
+                          .toLowerCase()
+                          .includes(tag.toLowerCase())
+                    : false
+                )
+              )
+            );
+
+            results.push(entries!);
+          }
+
+          if (current?.children.length) stack.push(...current.children);
+        }
+
+        return results;
+      },
+
+    /**
      * Returns the parents starting at root and the current template as an array of breadcrumb
      * objects which only contain the name and id of the templates
      * @returns array of simple breadcrum objects containing name and Id
@@ -261,9 +329,6 @@ export const useTemplateStore = defineStore("template", {
       return undefined;
     },
 
-    // @todo - add functions that update the attribute-objects "value"-prop in the current entry
-
-    updateEntryValue()
     // wichtig: number-attribute haben einen min und max-wert, auf den geclampt werden muss wenn der gesetzt ist
 
     /* --------------- ATTRIBUTE SECTION --------------- */
@@ -291,7 +356,7 @@ export const useTemplateStore = defineStore("template", {
       this.currentTemplate!.attributes.splice(attributeIndex, 1);
     },
 
-    updateAttributeName(attributeId: number, newName: String) {
+    updateAttributeName(attributeId: number, newName: string) {
       this.currentTemplate!.attributes.forEach((att, _index) => {
         if (att.id === attributeId) {
           att.name = newName;
@@ -299,12 +364,16 @@ export const useTemplateStore = defineStore("template", {
       });
     },
 
-    updateSelectedAttributeName(newName: String) {
+    updateSelectedAttributeName(newName: string) {
       this.currentTemplate!.attributes.forEach((att, _index) => {
         if (att.id === this.selectedAttributeId) {
           att.name = newName;
         }
       });
+    },
+
+    setSelectedAttributeValue(value: any) {
+      this.selectedAttribute.value = value;
     },
 
     /* --------------- TEMPLATE SECTION --------------- */
@@ -427,7 +496,7 @@ export const useTemplateStore = defineStore("template", {
       this.showContentEditor = false;
     },
 
-    updateCurrentTemplateName(newName: String) {
+    updateCurrentTemplateName(newName: string) {
       this.currentTemplate!.name = newName;
     },
   },

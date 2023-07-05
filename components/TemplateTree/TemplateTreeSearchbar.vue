@@ -1,11 +1,13 @@
-<template lang="">
+<template>
   <div
     class="border-b-2 border-gray-200 relative flex w-full bg-gray-400 text-gray-100"
   >
     <input
+      id="searchInput"
       type="text"
       class="bg-gray-400 border-none text-sm p-0 pl-1"
       placeholder="Searchbar"
+      @keydown.enter="handleKeyPress"
     />
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,6 +16,7 @@
       stroke-width="1.5"
       stroke="currentColor"
       class="w-4 h-4 absolute right-1 top-1"
+      @click="handleSearch"
     >
       <path
         stroke-linecap="round"
@@ -23,7 +26,24 @@
     </svg>
   </div>
 </template>
+
 <script>
-export default {};
+import { useTemplateStore } from "~~/stores/template";
+const store = useTemplateStore();
+export default {
+  methods: {
+    handleSearch() {
+      const inputText = document.querySelector("#searchInput").value;
+      console.log("Searching for:", inputText);
+      console.log(store.searchTemplates(inputText));
+    },
+    handleKeyPress(event) {
+      if (event.key === "Enter") {
+        this.handleSearch();
+      }
+    },
+  },
+};
 </script>
+
 <style lang=""></style>

@@ -2,7 +2,7 @@ import { Attribute } from "./Attributes";
 import Entry from "./Entry";
 
 export default class Template {
-  name: String;
+  name: string;
   attributes: Attribute[];
   // eslint-disable-next-line no-use-before-define
   children: Template[];

@@ -150,11 +150,11 @@ export const useTemplateStore = defineStore("template", {
      * @warning Seems like unintended behavior!
      * @returns currently selected content page and default page if null
      */
-    selectedEntry(state): Entry {
+    selectedEntry(state): Entry | undefined {
       return (
         this.currentTemplate?.entries.find(
           (page) => page.id === state.selectedEntryId
-        ) ?? new Entry("entry")
+        ) ?? undefined
       );
     },
   },
@@ -197,9 +197,45 @@ export const useTemplateStore = defineStore("template", {
       this.showContentEditor = true;
     },
 
+    /**
+     * @todo Merge attribute changes on template level immediately uppon submition
+     */
+
+    /**
+     * When called, pushes modifications to Attributes from template level to entry level
+     * Hoever, this is only called for the currently selected attribute upon selections
+     * @todo Conflict resolution
+     */
     updateEntryAttributes() {
-      // @todo - make sure that the content page has the same attributes as the template while remaining the filled in data
-      this.selectedEntry.attributes = this.currentTemplate!.attributes;
+      if (!this.selectedEntry) return;
+
+      const templateAttributes = this.currentTemplate!.attributes;
+      const entrytAttributes = this.selectedEntry!.attributes;
+      const newEntryAttributes: Attribute[] = [];
+
+      // If attributes have been added at template level, add only the new ones on entry level
+      if (templateAttributes.length > entrytAttributes.length)
+        entrytAttributes.push(
+          ...templateAttributes.filter(
+            (attribute) =>
+              !templateAttributes.find((compare) => compare.id === attribute.id)
+          )
+        );
+
+      // Filter out any attributes from entry level that can't be found on template level
+      entrytAttributes.forEach((attribute) => {
+        const compare = templateAttributes.find(
+          (compare) => compare.id === attribute.id
+        );
+
+        if (compare) {
+          attribute.name = compare.name;
+          attribute.type = compare.type;
+          newEntryAttributes.push(attribute);
+        }
+      });
+
+      this.selectedEntry.setAttributes(newEntryAttributes);
     },
 
     /**
@@ -226,6 +262,8 @@ export const useTemplateStore = defineStore("template", {
     },
 
     // @todo - add functions that update the attribute-objects "value"-prop in the current entry
+
+    updateEntryValue()
     // wichtig: number-attribute haben einen min und max-wert, auf den geclampt werden muss wenn der gesetzt ist
 
     /* --------------- ATTRIBUTE SECTION --------------- */

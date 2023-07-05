@@ -1,13 +1,14 @@
 class Attribute {
   id: number;
   name: String;
-  value: any;
+  value?: any;
   type: String;
 
-  constructor(name: String) {
+  constructor(name: String, value?: any) {
     this.id = -1;
     this.name = name;
     this.type = "base";
+    this.value = value;
   }
 
   setId(id: number) {

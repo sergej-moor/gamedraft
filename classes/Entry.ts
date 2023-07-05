@@ -14,4 +14,8 @@ export default class Entry {
   setId(id: number) {
     this.id = id;
   }
+
+  setAttributes(attributes: Attribute[]) {
+    this.attributes = attributes;
+  }
 }

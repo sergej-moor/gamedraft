@@ -269,43 +269,39 @@ export const useTemplateStore = defineStore("template", {
     },
 
     /**
-     * @todo Merge attribute changes on template level immediately uppon submition
-     */
-
-    /**
-     * When called, pushes modifications to Attributes from template level to entry level
-     * Hoever, this is only called for the currently selected attribute upon selections
-     * @todo Conflict resolution
+     * When called, pushes modifications to Attributes from the current template to all dependant entries
+     * Should respect the order determined in the template
+     * @todo testing
      */
     updateEntryAttributes() {
-      if (!this.selectedEntry) return;
+      const stack: Template[] = [];
+      stack.push(this.currentTemplate!);
 
-      const templateAttributes = this.currentTemplate!.attributes;
-      const entrytAttributes = this.selectedEntry!.attributes;
-      const newEntryAttributes: Attribute[] = [];
+      while (stack.length > 0) {
+        const current = stack.pop();
 
-      // If attributes have been added at template level, add only the new ones on entry level
-      if (templateAttributes.length > entrytAttributes.length)
-        entrytAttributes.push(
-          ...templateAttributes.filter(
-            (attribute) =>
-              !templateAttributes.find((compare) => compare.id === attribute.id)
-          )
-        );
+        current?.entries?.forEach((entry) => {
+          const newAttributes: Attribute[] = [];
 
-      // Filter out any attributes from entry level that can't be found on template level
-      entrytAttributes.forEach((attribute) => {
-        const compare = templateAttributes.find(
-          (compare) => compare.id === attribute.id
-        );
+          current?.attributes.forEach((templateLevel) => {
+            const match = entry.attributes.find(
+              (entryLevel) => entryLevel.id === templateLevel.id
+            );
 
-        if (compare) {
-          attribute.name = compare.name;
-          newEntryAttributes.push(attribute);
-        }
-      });
+            if (match) {
+              match.name = templateLevel.name;
+              match.type = templateLevel.type;
+              newAttributes.push(match);
+            } else {
+              newAttributes.push(templateLevel);
+            }
+          });
 
-      this.selectedEntry.setAttributes(newEntryAttributes);
+          entry.setAttributes(newAttributes);
+        });
+
+        if (current?.children.length) stack.push(...current.children);
+      }
     },
 
     /**
@@ -340,7 +336,7 @@ export const useTemplateStore = defineStore("template", {
     },
 
     addAttribute(
-      AttributeType: new (name: string, id: number, value?: any) => any,
+      AttributeType: new (name: string, id: number, value?: any) => Attribute,
       name?: string,
       value?: any
     ) {

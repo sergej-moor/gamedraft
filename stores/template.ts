@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import Template from "../classes/Template";
-import { Attribute, Numberfield, Textfield } from "~~/classes/Attributes";
+import { Attribute, NumberField, TextField } from "~~/classes/Attributes";
 import Entry from "~~/classes/Entry";
 import Breadcrumb from "~~/classes/Breadcrumb";
 
@@ -17,6 +17,7 @@ interface State {
   tabs: { id: number; templateId: number; attributeId: number }[];
   showContentEditor: boolean;
   selectedElementCache: Template | Entry | null;
+  selectedParentsCache: Template[] | null;
   root: Template;
 }
 
@@ -35,6 +36,7 @@ export const useTemplateStore = defineStore("template", {
     tabs: [{ id: 0, templateId: 0, attributeId: 0 }],
     showContentEditor: false,
     selectedElementCache: null,
+    selectedParentsCache: null,
     root: new Template("rootTemplate", 1),
   }),
 
@@ -86,9 +88,18 @@ export const useTemplateStore = defineStore("template", {
      * @returns parents of current template in ordered array starting with root
      */
     getParentsOfCurrent: (state): Template[] | null => {
-      return useTemplateStore().getParentsOfTemplateById(
-        state.selectedTemplateId
-      );
+      const parents = state.selectedParentsCache;
+      if (
+        parents &&
+        parents[parents.length - 1].children.find(
+          (child) => child.id === state.selectedTemplateId
+        )
+      )
+        return parents;
+      else
+        return useTemplateStore().getParentsOfTemplateById(
+          state.selectedTemplateId
+        );
     },
 
     /**
@@ -210,7 +221,7 @@ export const useTemplateStore = defineStore("template", {
       return (
         this.currentTemplate?.attributes.find(
           (att) => att.id === state.selectedAttributeId
-        ) ?? new Attribute("This seems like bad practice", -69)
+        ) ?? new Attribute("Placeholder", -69)
       );
     },
 
@@ -222,8 +233,35 @@ export const useTemplateStore = defineStore("template", {
       return (
         this.currentTemplate?.entries.find(
           (page) => page.id === state.selectedEntryId
-        ) ?? undefined
+        ) ?? new Entry("Placeholder", -69)
       );
+    },
+
+    /**
+     * Iterates over template tree to find any empty value fields on entries, then returns those occurences
+     * @returns First value is entry with valueless attributes, second is those attributes
+     */
+    getEmptyValueFields(state): [Entry, Attribute[]][] | undefined {
+      const stack: Template[] = [];
+      const result: [Entry, Attribute[]][] = [];
+      stack.push(state.root);
+
+      while (stack.length > 0) {
+        const current = stack.pop();
+
+        current?.entries.forEach((entry) => {
+          const emptyFields: Attribute[] = [];
+          emptyFields.push(
+            ...entry.attributes.filter((attribute) => !attribute.value)
+          );
+
+          if (emptyFields.length) result.push([entry, emptyFields]);
+        });
+
+        if (current?.children.length) stack.push(...current.children);
+      }
+
+      return result;
     },
   },
   actions: {
@@ -335,6 +373,12 @@ export const useTemplateStore = defineStore("template", {
       this.selectedAttributeId = id;
     },
 
+    /**
+     * Creates a new Attribute ot the given type
+     * @param AttributeType Class of the Attribute
+     * @param name Name of the Attribute, reverts to "newName (id)" if left out
+     * @param value Value of the Attribute
+     */
     addAttribute(
       AttributeType: new (name: string, id: number, value?: any) => Attribute,
       name?: string,
@@ -359,12 +403,26 @@ export const useTemplateStore = defineStore("template", {
       this.currentTemplate!.attributes.splice(attributeIndex, 1);
     },
 
-    updateAttributeName(attributeId: number, newName: string) {
-      this.currentTemplate!.attributes.forEach((att, _index) => {
-        if (att.id === attributeId) {
-          att.name = newName;
+    updateAttributeName(targetId: number, newName: string): boolean {
+      let nameTaken = false;
+      let target: Attribute | undefined;
+
+      this.currentTemplate!.attributes.forEach((attribute) => {
+        if (attribute.name === newName) {
+          nameTaken = true;
+          return;
         }
+
+        if (attribute.id === targetId) target = attribute;
       });
+
+      if (target && !nameTaken) {
+        target.name = newName;
+        return true;
+      }
+
+      console.error(`Name: ${newName} already taken!`);
+      return false;
     },
 
     updateSelectedAttributeName(newName: string) {
@@ -514,13 +572,25 @@ export const useTemplateStore = defineStore("template", {
         return data.map((parsedAttribute: any) => {
           switch (parsedAttribute.type) {
             case "number":
-              return new Numberfield(
+              return new NumberField(
                 parsedAttribute.name,
                 parsedAttribute.id,
                 parsedAttribute.value
               );
             case "text":
-              return new Textfield(
+              return new TextField(
+                parsedAttribute.name,
+                parsedAttribute.id,
+                parsedAttribute.value
+              );
+            case "boolean":
+              return new TextField(
+                parsedAttribute.name,
+                parsedAttribute.id,
+                parsedAttribute.value
+              );
+            case "image":
+              return new TextField(
                 parsedAttribute.name,
                 parsedAttribute.id,
                 parsedAttribute.value
@@ -563,8 +633,9 @@ export const useTemplateStore = defineStore("template", {
     },
 
     setSelectedTemplateId(id: number) {
-      this.selectedTemplateId = id;
       this.showContentEditor = false;
+      this.selectedTemplateId = id;
+      this.selectedParentsCache = this.getParentsOfCurrent;
     },
 
     updateCurrentTemplateName(newName: string) {

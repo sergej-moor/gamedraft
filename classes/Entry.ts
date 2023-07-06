@@ -11,10 +11,6 @@ export default class Entry {
     this.attributes = [];
   }
 
-  setId(id: number) {
-    this.id = id;
-  }
-
   setAttributes(attributes: Attribute[]) {
     this.attributes = attributes;
   }

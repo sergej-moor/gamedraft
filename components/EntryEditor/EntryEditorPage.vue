@@ -1,22 +1,28 @@
 <template lang="">
-  <div>
-    <div class="divider">
+  <div class="bg-gray-600 p-2 pl-4 mt-2 rounded h-full overflow-y-scroll">
+    <!-- <div class="divider">
       <input
         type="text"
         :placeholder="name"
         :value="name"
         class="input input-ghost input-xs max-w-xs w-full text-xs text-center"
       />
-    </div>
+    </div> -->
 
-    <ol>
+    <div class="w-full text-3xl font-semibold mb-4">
+      {{ store.selectedEntry.name }}
+    </div>
+    <!-- <ol>
       <li v-for="(attribute, index) in attributes" :key="index">
         <EntryEditorAttribute :attribute="attribute" />
       </li>
-    </ol>
+    </ol> -->
   </div>
 </template>
 <script setup>
+import { useTemplateStore } from "~~/stores/template";
+const store = ref(useTemplateStore());
+
 const props = defineProps({
   name: { type: String, default: "" },
   id: { type: Number, default: -1 },

@@ -6,7 +6,7 @@
     }"
     @click="setAttributeId()"
   >
-    <!-- single line TEXTFIELD  -->
+    <!-- single line TextField  -->
     <div class="flex">
       <TemplateEditorPageAttributeTextInput
         v-if="attribute.type == 'text'"

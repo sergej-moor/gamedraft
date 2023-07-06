@@ -23,6 +23,6 @@ const store = useTemplateStore();
 const templateTree = ref(store.rootTemplate);
 
 function addEntry() {
-  templateStore.addEntry();
+  store.addEntry();
 }
 </script>

@@ -2,16 +2,16 @@
   <div class="form-control flex my-1">
     <div class="flex">
       <EntryEditorAttributeNumberInput
-        v-if="attribute.type == 'number'"
-        :title="attribute.name"
-        :input-val="attribute.value"
+        v-if="attribute.getType() == 'number'"
+        :title="attribute.getName()"
+        :input-val="attribute.getValue()"
       />
       <EntryEditorAttributeTextInput
-        v-if="attribute.type == 'text'"
-        :title="attribute.name"
-        :input-val="attribute.value"
+        v-if="attribute.getType() == 'text'"
+        :title="attribute.getName()"
+        :input-val="attribute.getValue()"
       />
-      <div v-else>Unknown Attribute type called {{ attribute.type }}</div>
+      <div v-else>Unknown Attribute type called {{ attribute.getType() }}</div>
     </div>
   </div>
 </template>

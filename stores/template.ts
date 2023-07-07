@@ -1,6 +1,13 @@
 import { defineStore } from "pinia";
 import Template from "../classes/Template";
-import { Attribute, NumberField, TextField } from "~~/classes/Attributes";
+import {
+  Attribute,
+  AttributeType,
+  BooleanField,
+  ImageField,
+  NumberField,
+  TextField,
+} from "~~/classes/Attributes";
 import Entry from "~~/classes/Entry";
 import Breadcrumb from "~~/classes/Breadcrumb";
 
@@ -37,7 +44,7 @@ export const useTemplateStore = defineStore("template", {
     showContentEditor: false,
     selectedElementCache: null,
     selectedParentsCache: null,
-    root: new Template("rootTemplate", 1),
+    root: new Template("Root", 1),
   }),
 
   getters: {
@@ -168,8 +175,11 @@ export const useTemplateStore = defineStore("template", {
             current?.attributes.find((attribute) =>
               searchTags.find((tag) =>
                 caseSensitiveSearch
-                  ? attribute.name.includes(tag)
-                  : attribute.name.toLowerCase().includes(tag.toLowerCase())
+                  ? attribute.getName().includes(tag)
+                  : attribute
+                      .getName()
+                      .toLowerCase()
+                      .includes(tag.toLowerCase())
               )
             )
           )
@@ -179,10 +189,11 @@ export const useTemplateStore = defineStore("template", {
             const entries = current?.entries.find((entry) =>
               entry.attributes.find((attribute) =>
                 searchTags.find((tag) =>
-                  attribute.value instanceof String
+                  attribute.getValue() instanceof String
                     ? caseSensitiveSearch
-                      ? attribute.value.includes(tag)
-                      : attribute.value
+                      ? attribute.getValue().includes(tag)
+                      : attribute
+                          .getValue()
                           .toLowerCase()
                           .includes(tag.toLowerCase())
                     : false
@@ -220,8 +231,8 @@ export const useTemplateStore = defineStore("template", {
     selectedAttribute(state): Attribute {
       return (
         this.currentTemplate?.attributes.find(
-          (att) => att.id === state.selectedAttributeId
-        ) ?? new Attribute("Placeholder", -69)
+          (att) => att.getId() === state.selectedAttributeId
+        ) ?? new TextField("Placeholder", -69)
       );
     },
 
@@ -252,7 +263,7 @@ export const useTemplateStore = defineStore("template", {
         current?.entries.forEach((entry) => {
           const emptyFields: Attribute[] = [];
           emptyFields.push(
-            ...entry.attributes.filter((attribute) => !attribute.value)
+            ...entry.attributes.filter((attribute) => !attribute.getValue())
           );
 
           if (emptyFields.length) result.push([entry, emptyFields]);
@@ -323,12 +334,11 @@ export const useTemplateStore = defineStore("template", {
 
           current?.attributes.forEach((templateLevel) => {
             const match = entry.attributes.find(
-              (entryLevel) => entryLevel.id === templateLevel.id
+              (entryLevel) => entryLevel.getId() === templateLevel.getId()
             );
 
             if (match) {
-              match.name = templateLevel.name;
-              match.type = templateLevel.type;
+              match.setName(templateLevel.getName());
               newAttributes.push(match);
             } else {
               newAttributes.push(templateLevel);
@@ -395,7 +405,7 @@ export const useTemplateStore = defineStore("template", {
     deleteAttribute(attributeId: number) {
       let attributeIndex = -1;
       this.currentTemplate!.attributes.forEach((att, index) => {
-        if (att.id === attributeId) {
+        if (att.getId() === attributeId) {
           attributeIndex = index;
         }
       });
@@ -403,21 +413,21 @@ export const useTemplateStore = defineStore("template", {
       this.currentTemplate!.attributes.splice(attributeIndex, 1);
     },
 
-    updateAttributeName(targetId: number, newName: string): boolean {
+    updateAttributeNameById(targetId: number, newName: string): boolean {
       let nameTaken = false;
       let target: Attribute | undefined;
 
       this.currentTemplate!.attributes.forEach((attribute) => {
-        if (attribute.name === newName) {
+        if (attribute.getName() === newName) {
           nameTaken = true;
           return;
         }
 
-        if (attribute.id === targetId) target = attribute;
+        if (attribute.getId() === targetId) target = attribute;
       });
 
       if (target && !nameTaken) {
-        target.name = newName;
+        target.setName(newName);
         return true;
       }
 
@@ -426,15 +436,11 @@ export const useTemplateStore = defineStore("template", {
     },
 
     updateSelectedAttributeName(newName: string) {
-      this.currentTemplate!.attributes.forEach((att, _index) => {
-        if (att.id === this.selectedAttributeId) {
-          att.name = newName;
-        }
-      });
+      this.updateAttributeNameById(this.selectedAttributeId, newName);
     },
 
-    setSelectedAttributeValue(value: any) {
-      this.selectedAttribute!.value = value;
+    updateSelectedAttributeValue(newValue: any) {
+      this.selectedAttribute!.setValue(newValue);
     },
 
     /* --------------- TEMPLATE SECTION --------------- */
@@ -565,38 +571,43 @@ export const useTemplateStore = defineStore("template", {
 
     /**
      * Takes a json string, parses it to a template tree, then sets it as the current tree
+     * @todo proper error handling when
      * @param json String representing an object tree
      */
     parseJsonToTemplateTree(json: string) {
       const deserializeAttributes = (data: any[]): Attribute[] => {
         return data.map((parsedAttribute: any) => {
           switch (parsedAttribute.type) {
-            case "number":
+            case AttributeType.TEXT_FIELD:
+              return new TextField(
+                parsedAttribute.getName(),
+                parsedAttribute.getId(),
+                parsedAttribute.getValue()
+              );
+            case AttributeType.NUMBER_FIELD:
               return new NumberField(
-                parsedAttribute.name,
-                parsedAttribute.id,
-                parsedAttribute.value
+                parsedAttribute.getName(),
+                parsedAttribute.getId(),
+                parsedAttribute.getValue()
               );
-            case "text":
-              return new TextField(
-                parsedAttribute.name,
-                parsedAttribute.id,
-                parsedAttribute.value
+            case AttributeType.BOOLEAN_FIELD:
+              return new BooleanField(
+                parsedAttribute.getName(),
+                parsedAttribute.getId(),
+                parsedAttribute.getValue()
               );
-            case "boolean":
-              return new TextField(
-                parsedAttribute.name,
-                parsedAttribute.id,
-                parsedAttribute.value
-              );
-            case "image":
-              return new TextField(
-                parsedAttribute.name,
-                parsedAttribute.id,
-                parsedAttribute.value
+            case AttributeType.IMAGE_FIELD:
+              return new ImageField(
+                parsedAttribute.getName(),
+                parsedAttribute.getId(),
+                parsedAttribute.getValue()
               );
             default:
-              return new Attribute(parsedAttribute.name, parsedAttribute.id);
+              return new NumberField(
+                parsedAttribute.getName(),
+                parsedAttribute.getId(),
+                parsedAttribute.getValue()
+              );
           }
         });
       };

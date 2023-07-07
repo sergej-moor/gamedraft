@@ -5,10 +5,10 @@ export default class Entry {
   id: number;
   attributes: Attribute[];
 
-  constructor(name: string, id: number) {
+  constructor(name: string, id: number, attributes: Attribute[]) {
     this.name = name;
     this.id = id;
-    this.attributes = [];
+    this.attributes = attributes;
   }
 
   setAttributes(attributes: Attribute[]) {

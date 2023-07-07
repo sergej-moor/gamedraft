@@ -9,17 +9,17 @@
     <!-- single line TextField  -->
     <div class="flex">
       <TemplateEditorPageAttributeTextInput
-        v-if="attribute.type == 'text'"
-        :title="attribute.name"
+        v-if="attribute.getType() == 'text'"
+        :title="attribute.getName()"
         @update-title="updateAttributeTitle"
       />
       <TemplateEditorPageAttributeNumberInput
-        v-else-if="attribute.type == 'number'"
-        :title="attribute.name"
+        v-else-if="attribute.getType() == 'number'"
+        :title="attribute.getName()"
         @update-title="updateAttributeTitle"
       />
 
-      <div v-else>Unknown Attribute Type called {{ attribute.type }}</div>
+      <div v-else>Unknown Attribute Type called {{ attribute.getType() }}</div>
       <TemplateEditorPageAttributeDeleteButton
         class="justify-self-end"
         @delete-attribute="handleDelete()"
@@ -34,7 +34,7 @@ import { Attribute } from "~~/classes/Attributes";
 import { useTemplateStore } from "~~/stores/template";
 const templateStore = useTemplateStore();
 
-const { updateAttributeName } = templateStore;
+const { updateAttributeNameById } = templateStore;
 
 const props = defineProps({
   attribute: {
@@ -54,7 +54,7 @@ const handleDelete = ref(() => {
 
 function updateAttributeTitle(newTitle) {
   templateStore.setSelectedAttributeId(id.value);
-  updateAttributeName(id.value, newTitle);
+  updateAttributeNameById(id.value, newTitle);
 }
 
 function setAttributeId() {

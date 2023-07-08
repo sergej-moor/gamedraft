@@ -297,7 +297,8 @@ export const useTemplateStore = defineStore("template", {
 
       const newEntry = new Entry(
         `newEntry (${this.lastEntryId + 1})`,
-        ++this.lastEntryId
+        ++this.lastEntryId,
+        []
       );
 
       newEntry.attributes.push(

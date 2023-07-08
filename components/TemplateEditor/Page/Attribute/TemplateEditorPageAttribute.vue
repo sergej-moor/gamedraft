@@ -9,12 +9,12 @@
     <!-- single line TextField  -->
     <div class="flex">
       <TemplateEditorPageAttributeTextInput
-        v-if="attribute.getType() == 'text'"
+        v-if="attribute.getType() == 0"
         :title="attribute.getName()"
         @update-title="updateAttributeTitle"
       />
       <TemplateEditorPageAttributeNumberInput
-        v-else-if="attribute.getType() == 'number'"
+        v-else-if="attribute.getType() == 1"
         :title="attribute.getName()"
         @update-title="updateAttributeTitle"
       />

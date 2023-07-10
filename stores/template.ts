@@ -1,13 +1,6 @@
 import { defineStore } from "pinia";
 import Template from "../classes/Template";
-import {
-  Attribute,
-  AttributeType,
-  BooleanField,
-  ImageField,
-  NumberField,
-  TextField,
-} from "~~/classes/Attributes";
+import { Attribute, TextField } from "~~/classes/Attributes";
 import Entry from "~~/classes/Entry";
 import Breadcrumb from "~~/classes/Breadcrumb";
 
@@ -146,7 +139,7 @@ export const useTemplateStore = defineStore("template", {
      * @param caseSensitiveSearch whether the search should be case sensitive
      * @param matchAllTags whether a template or entry must match all specified search tags or only at least one
      * @returns Templates and Entries containing the specified search tags
-     */
+     
     searchTemplates:
       (state) =>
       (
@@ -209,7 +202,7 @@ export const useTemplateStore = defineStore("template", {
 
         return results;
       },
-
+    */
     /**
      * Returns the parents starting at root and the current template as an array of breadcrumb
      * objects which only contain the name and id of the templates
@@ -251,7 +244,7 @@ export const useTemplateStore = defineStore("template", {
     /**
      * Iterates over template tree to find any empty value fields on entries, then returns those occurences
      * @returns First value is entry with valueless attributes, second is those attributes
-     */
+    
     getEmptyValueFields(state): [Entry, Attribute[]][] | undefined {
       const stack: Template[] = [];
       const result: [Entry, Attribute[]][] = [];
@@ -273,7 +266,7 @@ export const useTemplateStore = defineStore("template", {
       }
 
       return result;
-    },
+    }, */
   },
   actions: {
     /* --------------- ENTRY SECTION --------------- */
@@ -297,8 +290,7 @@ export const useTemplateStore = defineStore("template", {
 
       const newEntry = new Entry(
         `newEntry (${this.lastEntryId + 1})`,
-        ++this.lastEntryId,
-        []
+        ++this.lastEntryId
       );
 
       newEntry.attributes.push(
@@ -316,6 +308,41 @@ export const useTemplateStore = defineStore("template", {
       // console.log("set selectedEntry ID to " + this.selectedEntryId);
 
       this.showContentEditor = true;
+    },
+
+    /**
+     * When called, pushes modifications to Attributes from the current template to all dependant entries
+     * Should respect the order determined in the template
+     * @todo testing
+     */
+    updateAttributes() {
+      const stack: Template[] = [];
+      stack.push(this.currentTemplate!);
+
+      while (stack.length > 0) {
+        const current = stack.pop();
+
+        current?.entries?.forEach((entry) => {
+          const newAttributes: Attribute[] = [];
+
+          current?.attributes.forEach((templateLevel) => {
+            const match = entry.attributes.find(
+              (entryLevel) => entryLevel.getId() === templateLevel.getId()
+            );
+
+            if (match) {
+              match.setName(templateLevel.getName());
+              newAttributes.push(match);
+            } else {
+              newAttributes.push(templateLevel);
+            }
+          });
+
+          entry.setAttributes(newAttributes);
+        });
+
+        if (current?.children.length) stack.push(...current.children);
+      }
     },
 
     /**
@@ -441,7 +468,8 @@ export const useTemplateStore = defineStore("template", {
     },
 
     updateSelectedAttributeValue(newValue: any) {
-      this.selectedAttribute!.setValue(newValue);
+      console.log(newValue);
+      // this.selectedAttribute!.setValue(newValue);
     },
 
     /* --------------- TEMPLATE SECTION --------------- */
@@ -574,7 +602,7 @@ export const useTemplateStore = defineStore("template", {
      * Takes a json string, parses it to a template tree, then sets it as the current tree
      * @todo proper error handling when
      * @param json String representing an object tree
-     */
+    
     parseJsonToTemplateTree(json: string) {
       const deserializeAttributes = (data: any[]): Attribute[] => {
         return data.map((parsedAttribute: any) => {
@@ -642,7 +670,7 @@ export const useTemplateStore = defineStore("template", {
       const data = JSON.parse(json);
       this.root = deserializeTemplate(data);
       console.log(this.root);
-    },
+    },  */
 
     setSelectedTemplateId(id: number) {
       this.showContentEditor = false;

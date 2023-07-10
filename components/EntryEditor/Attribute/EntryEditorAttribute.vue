@@ -1,13 +1,15 @@
 <template lang="">
   <div class="form-control flex my-1">
     <div class="flex">
+      <!-- @todo fix magic number -->
       <EntryEditorAttributeNumberInput
-        v-if="attribute.getType() == 'number'"
+        v-if="attribute.getType() == 1"
         :title="attribute.getName()"
         :input-val="attribute.getValue()"
       />
+      <!-- @todo fix magic number -->
       <EntryEditorAttributeTextInput
-        v-if="attribute.getType() == 'text'"
+        v-if="attribute.getType() == 0"
         :title="attribute.getName()"
         :input-val="attribute.getValue()"
       />

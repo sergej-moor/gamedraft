@@ -21,6 +21,8 @@ abstract class Attribute {
   protected optional?: boolean;
   /** Value an AttributeInstance will default to uppon construction when set */
   protected defaultValue?: any;
+  /** Id of attribute which should be overridden by this attribute */
+  protected override?: number;
 
   constructor(name: string, id: number) {
     this.id = id;
@@ -59,6 +61,19 @@ class TextField extends Attribute {
   /** Whether the value of this attribute should be unique across the project */
   unique?: boolean;
 
+  constructor(
+    name: string,
+    id: number,
+    minLength?: string,
+    maxLength?: string,
+    unique?: boolean
+  ) {
+    super(name, id);
+    this.minLength = minLength;
+    this.maxLength = maxLength;
+    this.unique = unique;
+  }
+
   getType(): AttributeType {
     return AttributeType.TEXT_FIELD;
   }
@@ -78,6 +93,21 @@ class NumberField extends Attribute {
   /** Value has to be multiple of this number @todo Add option of predicate for non-linear growth */
   private stepSize?: number;
   private suffix?: string;
+
+  constructor(
+    name: string,
+    id: number,
+    minValue?: number,
+    maxValue?: number,
+    stepSize?: number,
+    suffix?: string
+  ) {
+    super(name, id);
+    this.minValue = minValue;
+    this.maxValue = maxValue;
+    this.stepSize = stepSize;
+    this.suffix = suffix;
+  }
 
   getType(): AttributeType {
     return AttributeType.NUMBER_FIELD;
@@ -100,7 +130,7 @@ class NumberField extends Attribute {
   }
 
   /**
-   * @returns Array containing min value, max value and stepSize in that order 
+   * @returns Array containing min value, max value and stepSize in that order
    */
   getValueConstraints(): (number | undefined)[] {
     return [this.minValue, this.maxValue, this.stepSize];

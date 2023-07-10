@@ -106,11 +106,11 @@ const templateStore = useTemplateStore();
 const { addAttribute, addTemplate, deleteCurrentTemplate } = templateStore;
 
 function addTextFieldAttribute() {
-  addAttribute(TextField, "Testo", "Somebody once told me!");
+  addAttribute(TextField, "Testo");
 }
 
 function addNumberFieldAttribute() {
-  addAttribute(NumberField, "Pesto", 69);
+  addAttribute(NumberField, "Pesto");
 }
 
 function addChild() {

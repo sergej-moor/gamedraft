@@ -1,17 +1,17 @@
-import { Attribute } from "./Attributes";
+import { AttributeInstance } from "./AttributeInstances";
 
 export default class Entry {
   name: String;
   id: number;
-  attributes: Attribute[];
+  instances: AttributeInstance[];
 
   constructor(name: string, id: number) {
     this.name = name;
     this.id = id;
-    this.attributes = [];
+    this.instances = [];
   }
 
-  setAttributes(attributes: Attribute[]) {
-    this.attributes = attributes;
+  setAttributeInstances(instances: AttributeInstance[]) {
+    this.instances = instances;
   }
 }

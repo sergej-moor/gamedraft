@@ -9,9 +9,9 @@ enum AttributeType {
 /** Stores information about an entry */
 abstract class Attribute {
   /** Unique identifier of the attribute. It is shared with all entry instances */
-  protected id: number;
+  id: number;
   /** Name of attribute, does not have to be unique throughout a project, but a template can only hold one with the same name */
-  protected name: string;
+  name: string;
   /** Whether setting the value of this attribute is optional */
   protected optional?: boolean;
   protected collapsed?: boolean;

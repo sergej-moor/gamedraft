@@ -39,7 +39,7 @@ export const useTemplateStore = defineStore("template", {
   state: (): State => ({
     lastEntryId: 1,
     lastTemplateId: 1,
-    lastAttributeId: 1,
+    lastAttributeId: 0,
     selectedEntryId: 1,
     selectedTemplateId: 1,
     selectedAttributeId: -1,

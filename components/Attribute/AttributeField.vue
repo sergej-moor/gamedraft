@@ -54,7 +54,7 @@ const props = defineProps({
 });
 const attribute = toRef(props, "attribute");
 
-const id = ref(attribute.value.id);
+const id = ref(attribute.value.getId());
 
 const handleDelete = ref(() => {
   store.deleteAttribute(id.value);

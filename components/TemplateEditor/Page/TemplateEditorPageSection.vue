@@ -12,10 +12,7 @@
 
     <ol v-if="visible" class="w-full">
       <li v-for="(attribute, index) in attributes" :key="index">
-        <TemplateEditorPageAttribute
-          :attribute="attribute"
-          @delete="deleteAttribute"
-        />
+        <AttributeField :attribute="attribute" @delete="deleteAttribute" />
       </li>
     </ol>
   </div>

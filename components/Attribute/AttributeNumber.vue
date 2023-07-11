@@ -16,6 +16,7 @@
         placeholder="Number input field."
         class="form-input text-sm bg-gray-200 border-none rounded-sm text-white placeholder-gray-100 px-2 py-1"
         disabled
+        :value="value"
       />
     </label>
   </div>
@@ -24,6 +25,7 @@
 defineEmits(["updateTitle"]);
 const props = defineProps({
   title: { type: String, default: "" },
+  value: { type: undefined, default: null },
 });
 
 const title = toRef(props, "title");

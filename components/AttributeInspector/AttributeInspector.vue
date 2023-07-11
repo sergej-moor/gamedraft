@@ -44,7 +44,7 @@ import { useTemplateStore } from "@/stores/template";
 
 const props = defineProps({
   name: { type: String, default: "" },
-  type: { type: String, default: "" },
+  type: { type: Number, default: -1 },
   id: { type: Number, default: -1 },
 });
 const name = toRef(props, "name");

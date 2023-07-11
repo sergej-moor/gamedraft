@@ -6,6 +6,25 @@ enum AttributeType {
   IMAGE_FIELD,
 }
 
+function createNewAttribute(
+  name: string,
+  id: number,
+  type: AttributeType
+): Attribute {
+  switch (type) {
+    case AttributeType.TEXT_FIELD:
+      return new TextField(name, id);
+    case AttributeType.NUMBER_FIELD:
+      return new NumberField(name, id);
+    case AttributeType.BOOLEAN_FIELD:
+      return new BooleanField(name, id);
+    case AttributeType.IMAGE_FIELD:
+      return new ImageField(name, id);
+    default:
+      throw new Error(`Unknown Attribute type: ${type}!`);
+  }
+}
+
 /**
  * A blueprint for an Attribute which does not actually hold the values defined in the entry editor
  * Contains constraints for the value an Attribute can take, as well as a bunch of utility functions
@@ -250,4 +269,5 @@ export {
   BooleanField,
   ImageField,
   AttributeType,
+  createNewAttribute,
 };

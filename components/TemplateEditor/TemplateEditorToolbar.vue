@@ -136,12 +136,7 @@
   </div>
 </template>
 <script setup>
-import {
-  BooleanField,
-  NumberField,
-  TextField,
-  ImageField,
-} from "~~/classes/Attributes";
+import { AttributeType } from "~~/classes/Attributes";
 
 import { useTemplateStore } from "@/stores/template";
 
@@ -149,19 +144,19 @@ const templateStore = useTemplateStore();
 const { addAttribute, addTemplate, deleteCurrentTemplate } = templateStore;
 
 function addImageAttribute() {
-  addAttribute(ImageField, "Image");
+  addAttribute(AttributeType.IMAGE_FIELD);
 }
 
 function addCheckboxAttribute() {
-  addAttribute(BooleanField, "boolfield");
+  addAttribute(AttributeType.BOOLEAN_FIELD);
 }
 
 function addTextAttribute() {
-  addAttribute(TextField, "Testo");
+  addAttribute(AttributeType.TEXT_FIELD);
 }
 
 function addNumberAttribute() {
-  addAttribute(NumberField, "Pesto");
+  addAttribute(AttributeType.NUMBER_FIELD);
 }
 
 function addChild() {

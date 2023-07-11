@@ -1,28 +1,31 @@
-<template>
+<template lang="">
   <div class="flex-1 w-full">
     <label class="m-0 flex w-full">
       <span class="flex mr-4">
-        <IconEdit />
         <input
-          class="form-input text-sm bg-gray-800 border-none w-fit outline-none focus:outline-none px-2 py-1"
+          class="w-full input input-sm input-ghost focus:outline-none focus:bg-transparent"
           type="text"
           placeholder="Attribute name"
           :value="title"
-          @input="$emit('updateTitle', $event.target.value)"
+          disabled
         />
       </span>
-      <input
-        type="number"
-        placeholder="Number input field."
-        class="form-input text-sm bg-gray-200 border-none rounded-sm text-white placeholder-gray-100 px-2 py-1"
-        disabled
-        :value="value"
-      />
+
+      <span class="w-full flex p-0">
+        <input
+          type="text"
+          placeholder="Number"
+          class="input input-bordered input-xs"
+          :value="value"
+          @input="$emit('updateValue', $event.target.value)"
+        />
+        <IconEdit />
+      </span>
     </label>
   </div>
 </template>
 <script setup>
-defineEmits(["updateTitle"]);
+defineEmits(["updateValue"]);
 const props = defineProps({
   title: { type: String, default: "" },
   value: { type: undefined, default: null },

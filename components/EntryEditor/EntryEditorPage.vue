@@ -13,14 +13,10 @@
     </div>
     <ol>
       <li
-        v-for="(attribute, index) in store.selectedEntry.attributes"
+        v-for="(instance, index) in store.selectedEntry.instances"
         :key="index"
       >
-        <AttributeField
-          :entry="true"
-          :attribute="attribute"
-          @delete="deleteAttribute"
-        />
+        <InstanceField :instance="instance" />
       </li>
     </ol>
   </div>
@@ -28,20 +24,18 @@
 <script setup>
 import { useTemplateStore } from "~~/stores/template";
 const store = ref(useTemplateStore());
-
-/* const props = defineProps({
-  name: { type: String, default: "" },
-  id: { type: Number, default: -1 },
-  attributes: {
+/*
+const props = defineProps({
+  instances: {
     type: Array,
     default() {
       return [];
     },
   },
 });
- */
-/* const name = toRef(props, "name");
-/* const id = toRef(props, "id"); 
+
+const name = toRef(props, "name");
+const id = toRef(props, "id"); 
 const attributes = toRef(props, "attributes"); */
 </script>
 <style lang=""></style>

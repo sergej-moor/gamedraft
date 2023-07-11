@@ -7,6 +7,7 @@ import {
   ImageField,
   NumberField,
   TextField,
+  createNewAttribute,
 } from "~~/classes/Attributes";
 import Entry from "~~/classes/Entry";
 import Breadcrumb from "~~/classes/Breadcrumb";
@@ -14,8 +15,6 @@ import {
   AttributeInstance,
   createNewInstance,
 } from "~~/classes/AttributeInstances";
-
-// import Breadcrumb from "~~/classes/Breadcrumb";
 
 interface State {
   lastEntryId: number;
@@ -156,7 +155,7 @@ export const useTemplateStore = defineStore("template", {
       (state) =>
       (
         searchQuery: string,
-        includeEntryValues?: boolean,
+        includeInstanceValues?: boolean,
         caseSensitiveSearch?: boolean
         // matchAllTags?: boolean
       ): (Template | Entry)[] => {
@@ -190,14 +189,14 @@ export const useTemplateStore = defineStore("template", {
           )
             results.push(current);
 
-          if (includeEntryValues) {
+          if (includeInstanceValues) {
             const entries = current?.entries.find((entry) =>
-              entry.instances.find((attribute) =>
+              entry.instances.find((instance) =>
                 searchTags.find((tag) =>
-                  attribute.getValue() instanceof String
+                  instance.getValue() instanceof String
                     ? caseSensitiveSearch
-                      ? attribute.getValue().includes(tag)
-                      : attribute
+                      ? instance.getValue().includes(tag)
+                      : instance
                           .getValue()
                           .toLowerCase()
                           .includes(tag.toLowerCase())
@@ -303,13 +302,15 @@ export const useTemplateStore = defineStore("template", {
         ++this.lastEntryId
       );
 
-      newEntry.instances.push(
-        ...(this.getParentsOfCurrent
-          ?.flatMap((parent) => parent.attributes)
-          .concat(this.currentTemplate?.attributes ?? [])
-          .map((attribute) => createNewInstance(attribute)) ?? [])
+      const parentAttributes: Attribute[] =
+        this.getParentsOfCurrent?.flatMap((parent) => parent.attributes) ?? [];
+      const totalAttributes: Attribute[] = parentAttributes.concat(
+        this.currentTemplate?.attributes ?? []
       );
+      const newInstances: AttributeInstance[] =
+        totalAttributes.map((attribute) => createNewInstance(attribute)) ?? [];
 
+      newEntry.instances.push(...newInstances);
       this.currentTemplate!.entries.push(newEntry);
       return true;
     },
@@ -380,16 +381,14 @@ export const useTemplateStore = defineStore("template", {
     /**
      * Creates a new Attribute ot the given type
      * Automatically creates a matching instance on every dependent entry
-     * @param AttributeType Class of the Attribute
+     * @param type Type of Attribute
      * @param name Name of the Attribute, reverts to "newAttribute (id)" if left out
      */
-    addAttribute(
-      AttributeType: new (name: string, id: number) => Attribute,
-      name?: string
-    ) {
-      const newAttribute = new AttributeType(
-        name || `newAttribute (${this.lastAttributeId + 1})`,
-        ++this.lastAttributeId
+    addAttribute(type: AttributeType) {
+      const newAttribute = createNewAttribute(
+        `newAttribute (${this.lastAttributeId + 1})`,
+        ++this.lastAttributeId,
+        type
       );
 
       this.currentTemplate!.attributes.push(newAttribute);
